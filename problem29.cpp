@@ -80,5 +80,6 @@ int main ()
     num = (num - (99*10) + hits + hits2);
     std::cout << num << '\n';
     
+
     return 0;
 }
