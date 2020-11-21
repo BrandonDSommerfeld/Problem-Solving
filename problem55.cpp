@@ -28,6 +28,9 @@ int main ()
     //Eventually forms a palindrome after enough iterations
     //Assume 50 iterations max
 
+
+    //Just brute force 50 iterations on each number
+    //Hardest part was searching for std::reverse
     int nums{0};
     for(int i{0}; i < 10000; i++)
     {
