@@ -33,9 +33,11 @@ int main ()
     }
     int longest{0};
     int best{0};
+    //Kind of brute force, with some optimization
     for(int i{primes.size()-1}; i >= 0; i--)
     {
         int num{primes[i]};
+        //Don't even look if it can't be better
         for(int start{0}; start < i; start++)
         {
             if(num / primes[start] > longest)
