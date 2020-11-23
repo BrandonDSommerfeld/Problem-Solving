@@ -35,6 +35,7 @@ int main ()
         {
             num++;
         }
+        //Add 2 to value, and take reciprocal
         denominator = 2*denominator + numerator;
         numerator = (denominator-numerator)/2;
     }

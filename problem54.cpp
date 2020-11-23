@@ -228,7 +228,7 @@ int main ()
 {
     //In the file p054_poker.txt, there are lines with lots of poker
     //hands. Determine how many the first player wins
-     std::ifstream inf{"p054_poker.txt"};
+    std::ifstream inf{"p054_poker.txt"};
     if(!inf)
     {
         std::cout << "Couldn't find file\n";
