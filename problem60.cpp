@@ -27,10 +27,12 @@ int main ()
 {
     //Find 5 primes such that concatenating any 2 in either order
     //is also prime. Their sum must be minimal
+    //Limit was determined by geting outputs from previous runs
     int limit = 34427;
     //This takes forever to run, answer is
-    //3 3119 9887 36263 48731
-    std::cout << 3+3119+9887+36263+48731 << '\n';
+    //13 5197 5701 6733 8389
+
+    //Just repeatedly go through all values, checking at each step
     for(int a{3}; a < limit; a += 2)
     {
         if(isPrime(a))
