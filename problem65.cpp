@@ -66,9 +66,11 @@ int main ()
             denom /= g;
         }
     }
+
+    //This gets flipped at the end when it shouldn't, so actually
+    //Flip it, and then it is off by 1 since the fraction starts 
+    //With 2, not 1
     denom += num;
-    std::cout << num << '\n';
-    std::cout << denom << '\n';
     std::cout << digits(denom) << '\n';
     return 0;
 }
