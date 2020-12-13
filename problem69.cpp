@@ -9,8 +9,12 @@ static bool* composite;
 
 int totient(int num)
 {
+    if(!composite[num])
+    {
+        return num-1;
+    }
     int result = num;
-    for(int i = 2; i <= sqrt(num); i++)
+    for(int i = 2; i <= num/2; i++)
     {
         if(!composite[i] && num % i == 0)
         {
