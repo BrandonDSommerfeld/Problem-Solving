@@ -50,6 +50,8 @@ int totient(int num)
         return num-1;
     }
     
+    //This loop could be improved by making it iterative instead
+    //of recursive
     for(int i = 0; primes[i] <= num/2; i++)
     {
         if(num % primes[i] == 0)
@@ -71,6 +73,7 @@ int totient(int num)
     }
     return 0;
 }
+
 
 int main ()
 {

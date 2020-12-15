@@ -7,6 +7,8 @@
 
 static bool* composite;
 
+
+//This function is bad, but it works for this problem
 int totient(int num)
 {
     if(!composite[num])
@@ -24,6 +26,43 @@ int totient(int num)
     }
     return result;
 }
+
+
+/*
+This function is recursive on each prime factor and 
+MUCH faster than the above function
+
+int totient(int num)
+{
+    if(num == 1) return 1;
+    if(!composite[num])
+    {
+        return num-1;
+    }
+    
+    for(int i = 0; primes[i] <= num/2; i++)
+    {
+        if(num % primes[i] == 0)
+        {
+            int power = 0;
+            while(num % primes[i] == 0)
+            {
+                num /= primes[i];
+                power++;
+            }
+            int result = 1;
+            for(int j = 0; j < power-1; j++)
+            {
+                result *= primes[i];
+            }
+            result *= primes[i]-1;
+            return result*totient(num);
+        }
+    }
+    return 0;
+}
+
+*/
 
 int main ()
 {
