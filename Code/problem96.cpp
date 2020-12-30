@@ -13,6 +13,8 @@
 
 std::vector<int>* remove(std::vector<int>* nums, int elem)
 {
+    //Remove an element, if it is present, and
+    //return a vector with it removed
     std::vector<int> *temp = new std::vector<int>{};
     for(int i = 0; i < nums->size(); i++)
     {
@@ -448,6 +450,7 @@ int solve(int **input)
             }
         }
     }
+    //Check whether we have a solution or not
     int lowest = 10;
     int place = -1;
     for(int r = 0; r < 9; r++)
@@ -466,6 +469,7 @@ int solve(int **input)
     }
     if(place != -1)
     {
+        //If there is no solution, just guess and check on a square
         int** boi = new int*[9];
         for(int i = 0; i < 9; i++)
         {

@@ -26,8 +26,16 @@ int main ()
     //Find the last 10 digits of the prime number
     // 28433 * 2^7830457 + 1
 
-    //Use the repeating nature of powers to compute 2 to that power
-    //mod 10^10
+    //Just track last 10 digits of the powers of 2
+    long long num = 1;
+    for(int i = 0; i < 7830457; i++)
+    {
+        num = (num*2)%10000000000L;
+    }
+    num = (num*28433)%10000000000L;
+    num++;
+    std::cout << num << '\n';
+
 
     
     return 0;

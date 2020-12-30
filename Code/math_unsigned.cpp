@@ -496,7 +496,9 @@ namespace math
  
         friend std::ostream& operator<< (std::ostream& os, const Unsigned& u)
         {
-            os << u.to_string(); return os; } friend std::istream& operator>> (std::istream& is, Unsigned& u)
+            os << u.to_string(); return os; } 
+        
+        friend std::istream& operator>> (std::istream& is, Unsigned& u)
         {
             char digit = '\0';
             is >> digit;
