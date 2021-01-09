@@ -497,7 +497,6 @@ int solve(int **input)
             }
         }
     }
-    
     return (*grid[0][0])[0]*100 + (*grid[0][1])[0]*10+(*grid[0][2])[0];
 }
 
