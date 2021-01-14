@@ -10,19 +10,16 @@
 #include "math_unsigned.cpp"
 #include "math_signed.cpp"
 
-int adjustedLog(int num)
+struct frame
 {
-    int ans = 0;
-    while(num > 1)
-    {
-        if(num % 2 == 1)
-        {
-            ans++;
-        }
-        ans++;
-        num /= 2;
-    }
-    return ans;
+    int multiplications;
+    int val;
+    std::vector<int> used;
+};
+
+bool operator< (frame f1, frame f2)
+{
+    return f1.multiplications > f2.multiplications;
 }
 
 int main ()
@@ -32,33 +29,60 @@ int main ()
     //Generally, binary where you computing x^2, x^4, x^8, ...
     //and combining is pretty good, but it isn't always the best
 
-    //Something to do with prime factors?
-    //You create it by creating 1 prime factor, then
-    //using it as n for another prime factor?
-    int total = 0;
+    //Try using some kind of djikstra's
+    //from n on this
+
+    //Compute the "distance" from n for each value
+    //With a BFS algorithm
+    //Allow for ties to go in because sometimes the
+    //multiplications used to get there matter
+    
     int required[201];
-    for(int i = 1; i <= 200; i++)
+    for(int i = 0; i <= 200; i++)
     {
         required[i] = 0;
-        int current = 0;
-        int copy = i;
-        for(int j = 2; j <= copy; j++)
+    }
+    int total = 0;
+    std::priority_queue<frame> q{};
+    frame start;
+    start.multiplications = 0;
+    start.val = 1;
+    start.used = *(new std::vector<int>{});
+    start.used.push_back(1);
+    q.push(start);
+    while(!q.empty())
+    {
+        frame current = q.top();
+        q.pop();
+        if(required[current.val] == 0 ||
+        required[current.val] >= current.multiplications)
         {
-            while(copy % j == 0)
+            required[current.val] = current.multiplications;
+
+            for(int i = 0; i < current.used.size(); i++)
             {
-                current += required[j];
-                copy /= j;
+                frame temp{};
+                temp.multiplications = current.multiplications+1;
+                temp.val = current.val + current.used[i];
+                if(temp.val <= 200)
+                {
+                    temp.used = *(new std::vector<int>{});
+                    for(int j = 0; j < current.used.size(); j++)
+                    {
+                        temp.used.push_back(current.used[j]);
+                    }
+                    temp.used.push_back(temp.val);
+                    q.push(temp);
+                }
             }
         }
-        if(current == 0)
-        {
-            current = adjustedLog(i);
-        }
-        required[i] = current;
-        total += current;
-        std::cout << i << ' ' << current << '\n';
+    }
+
+    for(int i = 1; i <= 200; i++)
+    {
+        total += required[i];
     }
     std::cout << total << '\n';
-    
+
     return 0;
 }

@@ -16,8 +16,9 @@ int main ()
     //Where p is the nth prime number
     //Consider the remainder when this is divided by p^2
     //Find the least such n that makes this remainder above 10^10
-    bool *composite = new bool[1000000];
-    for(int i = 0; i < 1000000; i++)
+    static constexpr int limit = 1000000;
+    bool *composite = new bool[limit];
+    for(int i = 0; i < limit; i++)
     {
         composite[i] = false;
     }
@@ -26,7 +27,7 @@ int main ()
     {
         if(!composite[i])
         {
-            for(int k = 2; i*k < 1000000; k++)
+            for(int k = 2; i*k < limit; k++)
             {
                 composite[i*k] = true;
             }
@@ -38,6 +39,10 @@ int main ()
     {
         goal *= 10;
     }
+
+    //Pretty brute force
+    //Loc has to be odd for the powers to not cancel
+    //and just leave 2
     int loc = 1;
     for(int i = 2; ; i++)
     {
@@ -48,7 +53,7 @@ int main ()
             r *= 2;
             math::Unsigned div = i;
             div *= i;
-            if(r % div > goal)
+            if((r % div) > goal && loc % 2 == 1)
             {
                 std::cout << i << ' ' << loc << '\n';
                 break;

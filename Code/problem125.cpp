@@ -23,7 +23,7 @@ bool palindrome (std::string num)
     return true;
 }
 
-inline int sumSquares(int n)
+inline long long sumSquares(long long n)
 {
     return n*(n+1)*(2*n+1)/6;
 }
@@ -34,17 +34,23 @@ int main ()
     //Which are palindromic and also can be expressed
     //as the sum of consecutive squares
 
-    //Probably use the sum of squares formula
-
-    static constexpr int limit = 100000000;
-    long long total = 0;
+    //It turns out to be faster to generate all possible sums
+    //and check if palindrome, rather than generate palindromes
+    //and see if they can be made from a sum
+    //j < i-1 because it must be a sum of squares, so at least 2 terms
+    
+    static constexpr long long limit = 100000000;
+    math::Unsigned total = 0;
+    std::set<long long> seen{};
     for(int i = 0; i*i < limit; i++)
     {
-        for(int j = 0; j < i; j++)
+        for(int j = 0; j < i-1; j++)
         {
-            int guess = sumSquares(i) - sumSquares(j);
-            if(palindrome(std::to_string(guess)))
+            long long guess = sumSquares(i) - sumSquares(j);
+            if(guess < limit && seen.find(guess) == seen.end() &&
+                palindrome(std::to_string(guess)))
             {
+                seen.insert(guess);
                 total += guess;
             }
         }
