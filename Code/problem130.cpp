@@ -13,6 +13,23 @@
 static bool* composite;
 static std::vector<long long> primes;
 
+int gcd(int num1, int num2)
+{
+    if(num1 == 0)
+    {
+        return num2;
+    }
+    if(num2 == 0)
+    {
+        return num1;
+    }
+    if(num1 > num2)
+    {
+        return gcd(num1 % num2, num2);
+    }
+    return gcd(num1, num2 % num1);
+}
+
 int exp(long long b, int e, int n)
 {
     long long ans = 1;
@@ -24,30 +41,6 @@ int exp(long long b, int e, int n)
         }
         b = (b * b) % n;
         e /= 2;
-    }
-    return ans;
-}
-
-int totient (int num)
-{
-    int ans = num;
-    for(int i = 0; i < primes.size () && primes[i] * primes[i] <= num; i++)
-    {
-        if(num % primes[i] == 0)
-        {
-            num /= primes[i];
-            ans /= primes[i];
-            ans *= primes[i]-1;
-        }
-        while(num % primes[i] == 0)
-        {
-            num /= primes[i];
-        }
-    }
-    if(num > 1)
-    {
-        ans /= num;
-        ans *= num-1;
     }
     return ans;
 }
@@ -92,11 +85,36 @@ int best(int tot, int mod)
     return best(largest, mod);
 }
 
+int totient (int num)
+{
+    int ans = num;
+    for(int i = 0; i < primes.size () && primes[i] * primes[i] <= num; i++)
+    {
+        if(num % primes[i] == 0)
+        {
+            num /= primes[i];
+            ans /= primes[i];
+            ans *= primes[i]-1;
+        }
+        while(num % primes[i] == 0)
+        {
+            num /= primes[i];
+        }
+    }
+    if(num > 1)
+    {
+        ans /= num;
+        ans *= num-1;
+    }
+    return ans;
+}
+
 int main ()
 {
-    //Find the number n with gcd(n, 10) == 1,
-    //For which the first number of the form 1111...1111
-    //which is divisible by n has more than 1 million digits
+    //Continuing on the last problem, find the sum of the first
+    //25 composite numbers n where the smallest 111...111
+    //divisible by n has a number of 1's which divides n-1
+    //For primes, this is given because the totient is p-1
 
     static constexpr int limit = 1000000;
     composite = new bool[limit];
@@ -119,25 +137,24 @@ int main ()
         }
     }
 
-    //If 111...111 is divisible by i, then 
-    //999...999 is divisible by 9i, which means
-    //we are looking for a power of 10 which is 
-    //congruent to 1 mod 9i
-    //We also require this to be the smallest power of 10
-    //congruent to 1, so we recursively search to see 
-    //what the smallest is
-    for(int i = 1000000; ; i++)
+    int total = 0;
+    int found = 0;
+    //Basically just reuse functions from last problem to determine
+    //The number of digits in the repunit 11...11
+    //and see if that divides n-1
+    for(int i = 3; ; i++)
     {
-        if(i % 10 == 1 || i % 10 == 3 || i % 10 == 7 
-        || i % 10 == 9)
+        if(composite[i] && gcd(10,i) == 1)
         {
-            int tot = totient(9*i);
-            if(tot > limit)
+            int largest = best(totient(9*i), 9*i);
+            if((i-1) % largest == 0)
             {
-                int largest = best(tot, 9*i);
-                if(largest > limit)
+                total += i;
+                found++;
+                std::cout << i << '\n';
+                if(found == 25)
                 {
-                    std::cout << i << '\n';
+                    std::cout << total << '\n';
                     return 0;
                 }
             }
