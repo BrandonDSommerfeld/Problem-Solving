@@ -158,37 +158,37 @@ namespace math
             return *this;
         }
 
-        Signed operator% (const Signed& rhs)
+        friend Signed operator% (const Signed& lhs, const Signed& rhs)
         {
-            Signed ans{*this};
+            Signed ans{lhs};
             ans %= rhs;
             return ans;
         }
 
-        Signed operator/ (const Signed& rhs)
+        friend Signed operator/ (const Signed& lhs, const Signed& rhs)
         {
-            Signed ans{*this};
+            Signed ans{lhs};
             ans /= rhs;
             return ans;
         }
 
-        Signed operator* (const Signed& rhs)
+         friend Signed operator* (const Signed& lhs, const Signed& rhs)
         {
-            Signed ans{*this};
+            Signed ans{lhs};
             ans *= rhs;
             return ans;
         }
 
-        Signed operator+ (const Signed& rhs)
+        friend Signed operator+ (const Signed& lhs, const Signed& rhs)
         {
-            Signed ans{*this};
+            Signed ans{lhs};
             ans += rhs;
             return ans;
         }
 
-        Signed operator- (const Signed& rhs)
+        friend Signed operator- (const Signed& lhs, const Signed& rhs)
         {
-            Signed ans{*this};
+            Signed ans{lhs};
             ans -= rhs;
             return ans;
         }

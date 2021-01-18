@@ -28,7 +28,7 @@ math::Unsigned high)
     return true;
 }
 
-bool square (math::Unsigned num)
+bool square(math::Unsigned num)
 {
     math::Unsigned guess = 1;
     while(guess*guess <= num)
