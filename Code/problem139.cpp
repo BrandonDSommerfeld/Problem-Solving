@@ -21,14 +21,15 @@ int main ()
 
     //Essentially, pythagorean triples where a-b divides c
     //Pretty easy with the formula to generate triples
+    //Where u,v must be comprime and not both odd
 
-    int total = 0;
+    long long total = 0;
     static constexpr int limit = 100000000;
-    for(long long u = 1; u < 1000000; u++)
+    for(long long u = 1; u < 10000; u++)
     {
-        for(long long v = u+1; v < 1000000; v++)
+        for(long long v = u+1; v < 10000; v++)
         {
-            if(algorithms::gcd(u,v) == 1)
+            if((u-v) % 2 != 0 && algorithms::gcd(u,v) == 1)
             {
                 long long a = v*v-u*u;
                 long long b = 2*u*v;
@@ -39,14 +40,16 @@ int main ()
                     {
                         if(c % (a-b) == 0)
                         {
-                            total += limit/(a+b+c);
+                            std::cout << a << ' ' << b << ' ' << c << '\n';
+                            total += (limit-1)/(a+b+c);
                         }
                     }
                     else
                     {
                         if(c % (b-a) == 0)
                         {
-                            total += limit/(a+b+c);
+                            std::cout << a << ' ' << b << ' ' << c << '\n';
+                            total += (limit-1)/(a+b+c);
                         }
                     }
                 }
@@ -54,7 +57,6 @@ int main ()
                 {
                     break;
                 }
-                
             }
         }
     }

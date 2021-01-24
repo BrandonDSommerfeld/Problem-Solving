@@ -163,6 +163,36 @@ namespace algorithms
         return ans;
     }
 
+    math::Unsigned recursiveSqrt(math::Unsigned low, math::Unsigned high,
+    math::Unsigned num)
+    {
+        if(low == high || low == high-1)
+        {
+            return low;
+        }
+        math::Unsigned mid = (low+high)/2;
+        math::Unsigned guess = mid*mid;
+        if(guess < num)
+        {
+            return recursiveSqrt(mid, high, num);
+        }
+        if(guess > num)
+        {
+            return recursiveSqrt(low, mid-1, num);
+        }
+        return mid;
+    }
+
+    math::Unsigned sqrt(math::Unsigned num)
+    {
+        math::Unsigned guess = 1;
+        while(guess*guess < num)
+        {
+            guess *= 2;
+        }
+        return recursiveSqrt(guess/2, guess, num);
+    }
+
     int gcd(int num1, int num2)
     {
         if(num1 < 0)
@@ -390,11 +420,12 @@ namespace algorithms
             return low*low == num;
         }
         math::Unsigned mid = (low+high)/2;
-        if(mid*mid < num)
+        math::Unsigned guess = mid*mid;
+        if(guess < num)
         {
             return recursive_square(num, mid+1, high);
         }
-        if(mid*mid > num)
+        if(guess > num)
         {
             return recursive_square(num, low, mid);
         }
@@ -409,6 +440,36 @@ namespace algorithms
             guess *= 2;
         }
         return recursive_square(num, guess/2, guess);
+    }
+
+    bool recursive_cube(math::Unsigned num, math::Unsigned low, 
+    math::Unsigned high)
+    {
+        if(low == high)
+        {
+            return low*low == num;
+        }
+        math::Unsigned mid = (low+high)/2;
+        math::Unsigned guess = mid*mid*mid;
+        if(guess < num)
+        {
+            return recursive_cube(num, mid+1, high);
+        }
+        if(guess > num)
+        {
+            return recursive_cube(num, low, mid);
+        }
+        return true;
+    }
+
+    bool isCube(math::Unsigned num)
+    {
+        math::Unsigned guess = 1;
+        while(guess*guess*guess <= num)
+        {
+            guess *= 2;
+        }
+        return recursive_cube(num, guess/2, guess);
     }
 
     std::vector<int> extendedEuclidean(int num1, int num2)
