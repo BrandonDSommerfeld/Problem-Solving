@@ -133,7 +133,7 @@ namespace algorithms
         return ans;
     }
 
-    int exp(long long base, int exponent, int mod)
+    long long exp(long long base, int exponent, int mod)
     {
         long long ans = 1;
         while(exponent > 0)
@@ -148,6 +148,21 @@ namespace algorithms
         return ans;
     }
 
+    long long exp(long long base, int exponent)
+    {
+        long long ans = 1;
+        while(exponent > 0)
+        {
+            if(exponent % 2 == 1)
+            {
+                ans = (ans*base);
+            }
+            base = (base * base);
+            exponent /= 2;
+        }
+        return ans;
+    }
+
     math::Unsigned exp(math::Unsigned base, math::Unsigned exponent, math::Unsigned mod)
     {
         math::Unsigned ans = 1;
@@ -155,9 +170,26 @@ namespace algorithms
         {
             if(exponent % 2 == 1)
             {
-                ans = (ans*base) % mod;
+                ans *= base;
+                ans %= mod;
             }
-            base = (base * base) % mod;
+            base *= base;
+            base %= mod;
+            exponent /= 2;
+        }
+        return ans;
+    }
+
+    math::Unsigned exp(math::Unsigned base, math::Unsigned exponent)
+    {
+        math::Unsigned ans = 1;
+        while(exponent > 0)
+        {
+            if(exponent % 2 == 1)
+            {
+                ans *= base;
+            }
+            base *= base;
             exponent /= 2;
         }
         return ans;
@@ -191,6 +223,66 @@ namespace algorithms
             guess *= 2;
         }
         return recursiveSqrt(guess/2, guess, num);
+    }
+
+    bool recursiveIsNthPower(math::Unsigned low, math::Unsigned high,
+    math::Unsigned num, int n)
+    {
+        if(low == high)
+        {
+            return exp(low, n) == num;
+        }
+        math::Unsigned mid = (low+high)/2;
+        math::Unsigned guess = exp(mid, n);
+        if(guess < num)
+        {
+            return recursiveIsNthPower(mid+1, high, num, n);
+        }
+        if(guess > num)
+        {
+            return recursiveIsNthPower(low, mid, num, n);
+        }
+        return true;
+    }
+
+    bool isNthPower(math::Unsigned num, int n)
+    {
+        math::Unsigned guess = 1;
+        while(exp(guess, n) <= num)
+        {
+            guess *= 2;
+        }
+        return recursiveIsNthPower(guess/2, guess, num, n);
+    }
+
+    math::Unsigned recursiveNthRoot(math::Unsigned low, math::Unsigned high,
+    math::Unsigned num, int n)
+    {
+        if(low == high || low == high-1)
+        {
+            return low;
+        }
+        math::Unsigned mid = (low+high)/2;
+        math::Unsigned guess = exp(mid, n);
+        if(guess < num)
+        {
+            return recursiveNthRoot(mid, high, num, n);
+        }
+        if(guess > num)
+        {
+            return recursiveNthRoot(low, mid, num, n);
+        }
+        return mid;
+    }
+
+    math::Unsigned nthRoot(math::Unsigned num, int n)
+    {
+        math::Unsigned guess = 1;
+        while(exp(guess, n) <= num)
+        {
+            guess *= 2;
+        }
+        return recursiveNthRoot(guess/2, guess, num, n);
     }
 
     int gcd(int num1, int num2)
@@ -435,6 +527,36 @@ namespace algorithms
     bool isSquare(math::Unsigned num)
     {
         math::Unsigned guess = 1;
+        while(guess*guess <= num)
+        {
+            guess *= 2;
+        }
+        return recursive_square(num, guess/2, guess);
+    }
+
+    bool recursive_square(unsigned long long num, unsigned long long low, 
+    unsigned long long high)
+    {
+        if(low == high)
+        {
+            return low*low == num;
+        }
+        unsigned long long mid = (low+high)/2;
+        unsigned long long guess = mid*mid;
+        if(guess < num)
+        {
+            return recursive_square(num, mid+1, high);
+        }
+        if(guess > num)
+        {
+            return recursive_square(num, low, mid);
+        }
+        return true;
+    }
+
+    bool isSquare(unsigned long long num)
+    {
+        unsigned long long guess = 1;
         while(guess*guess <= num)
         {
             guess *= 2;
