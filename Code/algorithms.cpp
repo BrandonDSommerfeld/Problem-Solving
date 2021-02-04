@@ -245,6 +245,36 @@ namespace algorithms
         return true;
     }
 
+    bool recursiveIsNthPower(unsigned long long low, unsigned long long high,
+    unsigned long long num, int n)
+    {
+        if(low == high)
+        {
+            return exp(low, n) == num;
+        }
+        unsigned long long mid = (low+high)/2;
+        unsigned long long guess = exp(mid, n);
+        if(guess < num)
+        {
+            return recursiveIsNthPower(mid+1, high, num, n);
+        }
+        if(guess > num)
+        {
+            return recursiveIsNthPower(low, mid, num, n);
+        }
+        return true;
+    }
+
+    bool isNthPower(unsigned long long num, int n)
+    {
+        unsigned long long guess = 1;
+        while(exp(guess, n) <= num)
+        {
+            guess *= 2;
+        }
+        return recursiveIsNthPower(guess/2, guess, num, n);
+    }
+
     bool isNthPower(math::Unsigned num, int n)
     {
         math::Unsigned guess = 1;
@@ -285,6 +315,36 @@ namespace algorithms
         return recursiveNthRoot(guess/2, guess, num, n);
     }
 
+    unsigned long long recursiveNthRoot(unsigned long long low, unsigned long long high,
+    unsigned long long num, int n)
+    {
+        if(low == high || low == high-1)
+        {
+            return low;
+        }
+        unsigned long long mid = (low+high)/2;
+        unsigned long long guess = exp(mid, n);
+        if(guess < num)
+        {
+            return recursiveNthRoot(mid, high, num, n);
+        }
+        if(guess > num)
+        {
+            return recursiveNthRoot(low, mid, num, n);
+        }
+        return mid;
+    }
+
+    unsigned long long nthRoot(unsigned long long num, int n)
+    {
+        unsigned long long guess = 1;
+        while(exp(guess, n) <= num)
+        {
+            guess *= 2;
+        }
+        return recursiveNthRoot(guess/2, guess, num, n);
+    }
+
     int gcd(int num1, int num2)
     {
         if(num1 < 0)
@@ -295,6 +355,23 @@ namespace algorithms
         {
             num2 = -num2;
         }
+        if(num1 == 0)
+        {
+            return num2;
+        }
+        if(num2 == 0)
+        {
+            return num1;
+        }
+        if(num1 > num2)
+        {
+            return gcd(num1 % num2, num2);
+        }
+        return gcd(num1, num2 % num1);
+    }
+
+    int gcd(unsigned long long num1, unsigned long long num2)
+    {
         if(num1 == 0)
         {
             return num2;
