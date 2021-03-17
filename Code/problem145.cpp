@@ -11,6 +11,110 @@
 #include "math_signed.cpp"
 #include "algorithms.cpp"
 
+long long evaluate(bool* odd, bool* overflow, int len)
+{
+    long long total = 1;
+    for(int i = 0; i < len; i++)
+    {
+        if(!odd[i])
+        {
+            if(i == len-1 || !overflow[i+1])
+            {
+                return 0;
+            }
+            if(i < (len+1)/2)
+            {
+                if(len % 2 == 1 && i == len/2)
+                {
+                    total *= 5;
+                }
+                else if(i == 0 && !overflow[i])
+                {
+                    total *= 20;
+                }
+                else 
+                {
+                    total *= 25;
+                }                
+            }
+        }
+        else
+        {
+            if(i != len-1 && overflow[i+1])
+            {
+                return 0;
+            }
+            if(i < (len+1)/2)
+            {
+                if(len % 2 == 1 && i == len/2)
+                {
+                    return 0;
+                }
+                if(i == 0 && !overflow[i])
+                {
+                    total *= 20;
+                }
+                else if(!overflow[i])
+                {
+                    total *= 30;
+                }
+                else
+                {
+                    total *= 20;
+                }
+            }
+        }
+    }
+
+    return total;
+}
+
+long long recurse2(bool* odd, bool* overflow, int loc, int len)
+{
+    if(loc == (len+1)/2)
+    {
+        /*
+        for(int i = 0; i < len; i++)
+        {
+            std::cout << odd[i];
+        }
+        std::cout << ' ';
+        for(int i = 0; i < len; i++)
+        {
+            std::cout << overflow[i];
+        }
+        std::cout << ' ';
+        std::cout << evaluate(odd, overflow, len);
+        std::cout << '\n';
+        */   
+        return evaluate(odd, overflow, len);
+    }
+    long long total = 0;
+    total += recurse2(odd, overflow, loc+1, len);
+    overflow[loc] = true;
+    overflow[len-1-loc] = true;
+    total += recurse2(odd, overflow, loc+1, len);
+    overflow[loc] = false;
+    overflow[len-1-loc] = false;
+    return total;
+}
+
+long long recurse1(bool* odd, bool* overflow, int loc, int len)
+{
+    if(loc == (len+1)/2)
+    {
+        return recurse2(odd, overflow, 0, len);
+    }
+    long long total = 0;
+    total += recurse1(odd, overflow, loc+1, len);
+    odd[loc] = true;
+    odd[len-1-loc] = true;
+    total += recurse1(odd, overflow, loc+1, len);
+    odd[loc] = false;
+    odd[len-1-loc] = false;
+    return total;
+}
+
 int main ()
 {
     //A number is reversible if adding it to its 
@@ -24,6 +128,18 @@ int main ()
     //Also means second digit plus second to last cannot overflow, 
     //or else leading digit won't be odd
 
-    
+
+    long long total = 0;
+    for(int i = 2; i < 10; i++)
+    {
+        bool* odd = (bool*) calloc(sizeof(bool), i);
+        bool* overflow = (bool*) calloc(sizeof(bool), i);
+        total += recurse1(odd, overflow, 0, i);
+
+        std::cout << total << '\n'; 
+        free(odd);
+        free(overflow);
+    }    
+    std::cout << total << '\n';
     return 0; 
 }
