@@ -24,6 +24,7 @@ long long evaluate(bool* odd, bool* overflow, int len)
             }
             if(i < (len+1)/2)
             {
+                //Have to account for middle digits and leading 0's
                 if(len % 2 == 1 && i == len/2)
                 {
                     total *= 5;
@@ -73,20 +74,6 @@ long long recurse2(bool* odd, bool* overflow, int loc, int len)
 {
     if(loc == (len+1)/2)
     {
-        /*
-        for(int i = 0; i < len; i++)
-        {
-            std::cout << odd[i];
-        }
-        std::cout << ' ';
-        for(int i = 0; i < len; i++)
-        {
-            std::cout << overflow[i];
-        }
-        std::cout << ' ';
-        std::cout << evaluate(odd, overflow, len);
-        std::cout << '\n';
-        */   
         return evaluate(odd, overflow, len);
     }
     long long total = 0;
@@ -101,6 +88,7 @@ long long recurse2(bool* odd, bool* overflow, int loc, int len)
 
 long long recurse1(bool* odd, bool* overflow, int loc, int len)
 {
+    //Only go halfway, because sum is mirrored
     if(loc == (len+1)/2)
     {
         return recurse2(odd, overflow, 0, len);
@@ -128,7 +116,9 @@ int main ()
     //Also means second digit plus second to last cannot overflow, 
     //or else leading digit won't be odd
 
-
+    //Really, all that matters at each digit is if the 
+    //sum is odd or not, and whether it overflows
+    //so just check every possible configuration of these
     long long total = 0;
     for(int i = 2; i < 10; i++)
     {
