@@ -61,6 +61,26 @@ namespace math
         {
             // empty
         }
+
+        Unsigned(int u) :
+            digits(1, u)
+        {
+            // empty
+        }
+
+        Unsigned(Wigit u) : digits{}
+        {
+            digits.push_back(u & 0x0000000FFFFFFFFLL);
+            digits.push_back((u >> 32) & 0x0000000FFFFFFFFLL);
+            trim();
+        }
+
+        Unsigned(long long u) : digits{}
+        {
+            digits.push_back(u & 0x0000000FFFFFFFFLL);
+            digits.push_back((u >> 32) & 0x0000000FFFFFFFFLL);
+            trim();
+        }
  
         Unsigned(const std::string& s) :
             digits(1, 0)
@@ -486,7 +506,7 @@ namespace math
             Unsigned q(*this), r;
             do
             {
-                q.divide(10, q, r);
+                q.divide((Digit) 10, q, r);
                 oss << r.digits[0];
             } while (q.digits.back() != 0);
             std::string s(oss.str());
@@ -504,11 +524,11 @@ namespace math
             is >> digit;
             if (is.good() && std::isdigit(digit))
             {
-                u = digit - '0';
+                u = (Digit) digit - '0';
                 while (std::isdigit(is.peek()))
                 {
                     is >> digit;
-                    u = 10 * u + (digit - '0');
+                    u = (Digit) 10 * u + ((Digit) digit - '0');
                 }
             }
             else

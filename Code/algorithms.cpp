@@ -16,23 +16,23 @@
 namespace algorithms
 {
     static bool *composite;
-    static std::vector<int> primes;
+    static std::vector<long long> primes;
 
-    void generatePrimes(int limit)
+    void generatePrimes(long long limit)
     {
         composite = new bool[limit];
-        for(int i{2}; i*i < limit; i++)
+        for(long long i{2}; i*i < limit; i++)
         {
             if(!composite[i])
             {
-                for(int j{2}; i*j < limit; j++)
+                for(long long j{2}; i*j < limit; j++)
                 {
                     composite[i*j] = true;
                 }
             }
         }
 
-        for(int i = 2; i < limit; i++)
+        for(long long i = 2; i < limit; i++)
         {
             if(!composite[i])
             {
@@ -41,9 +41,9 @@ namespace algorithms
         }
     }
 
-    int totient (int num)
+    long long totient (long long num)
     {
-        int ans = num;
+        long long ans = num;
         for(int i = 0; i < primes.size () && primes[i] * primes[i] <= num; i++)
         {
             if(num % primes[i] == 0)
@@ -345,7 +345,7 @@ namespace algorithms
         return recursiveNthRoot(guess/2, guess, num, n);
     }
 
-    int gcd(int num1, int num2)
+    long long gcd(long long num1, long long num2)
     {
         if(num1 < 0)
         {
@@ -370,7 +370,7 @@ namespace algorithms
         return gcd(num1, num2 % num1);
     }
 
-    int gcd(unsigned long long num1, unsigned long long num2)
+    unsigned long long gcd(unsigned long long num1, unsigned long long num2)
     {
         if(num1 == 0)
         {
@@ -440,6 +440,18 @@ namespace algorithms
     }
 
     bool isPrime(math::Unsigned num)
+    {
+        for(int i = 0; i < primes.size() && primes[i]*primes[i] <= num; i++)
+        {
+            if(num % primes[i] == 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool isPrime(long long num)
     {
         for(int i = 0; i < primes.size() && primes[i]*primes[i] <= num; i++)
         {
@@ -671,7 +683,7 @@ namespace algorithms
         return recursive_cube(num, guess/2, guess);
     }
 
-    std::vector<int> extendedEuclidean(int num1, int num2)
+    std::vector<long long> extendedEuclidean(long long num1, long long num2)
     {
         bool positive1 = true;
         if(num1 < 0)
@@ -687,7 +699,7 @@ namespace algorithms
         }
         if(num1 == 0)
         {
-            std::vector<int> ans{};
+            std::vector<long long> ans{};
             ans.push_back(0);
             ans.push_back(1);
             if(!positive2)
@@ -699,7 +711,7 @@ namespace algorithms
         }
         if(num2 == 0)
         {
-            std::vector<int> ans{};
+            std::vector<long long> ans{};
             ans.push_back(1);
             if(!positive1)
             {
@@ -712,7 +724,7 @@ namespace algorithms
 
         if(num1 > num2)
         {
-            std::vector<int> prev = extendedEuclidean(num1%num2, num2);
+            std::vector<long long> prev = extendedEuclidean(num1%num2, num2);
             prev[1] -= prev[0]*(num1/num2);
             if(!positive1)
             {
@@ -724,9 +736,9 @@ namespace algorithms
             }
             return prev;
         }
-        std::vector<int> prev= extendedEuclidean(num2%num1, num1);
+        std::vector<long long> prev= extendedEuclidean(num2%num1, num1);
         prev[1] -= prev[0]*(num2/num1);
-        int temp = prev[0];
+        long long temp = prev[0];
         prev[0] = prev[1];
         prev[1] = temp;
         if(!positive1)
@@ -740,13 +752,13 @@ namespace algorithms
         return prev;
     }
 
-    int modularInverse(int a, int mod)
+    long long modularInverse(long long a, long long mod)
     {
         if(gcd(a, mod) != 1)
         {
             return 0;
         }
-        std::vector<int> temp = extendedEuclidean(a, mod);
+        std::vector<long long> temp = extendedEuclidean(a, mod);
         temp[0] %= mod;
         if(temp[0] < 0)
         {

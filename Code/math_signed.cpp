@@ -25,6 +25,24 @@ namespace math
             positive = n < 0 ? false : true;
         }
 
+        Signed(unsigned int n)
+        {
+            num = math::Unsigned(n);
+            positive = true;
+        }
+
+        Signed (long long n)
+        {
+            num = n < 0 ? math::Unsigned(-n) : math::Unsigned(n);
+            positive = n < 0 ? false : true;
+        }
+
+        Signed (unsigned long long n)
+        {
+            num = math::Unsigned(n);
+            positive = true;
+        }
+
         Signed (const Signed& copy)
         {
             num = math::Unsigned(copy.num);
