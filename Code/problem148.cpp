@@ -11,17 +11,6 @@
 #include "math_signed.cpp"
 #include "algorithms.cpp"
 
-int powerSeven (int length, int shift)
-{
-    int ans = 0;
-    int divider = 7;
-    while(divider <= length)
-    {
-        ans += length/divider;
-        divider *= 7;
-    }
-    return ans;
-}
 
 int main ()
 {
@@ -32,8 +21,31 @@ int main ()
     //n! / k! (n-k)!
     // n (n-1) (n-2) .. (n-k+1) / k (k-1) (k-2) (k-3) ... 2 * 1
     //Can't have more powers of 7 in the upper part
-    //Calculate power of 7 by taking interval, divide by 7 for first, 
-    //then 49 for extra, then 343 for even more
 
+    unsigned long long limit = 1000000000;
+    unsigned long long total = 0;
+    unsigned long long multiplier = 1;
+    unsigned long long multiplier2 = 1;
+    unsigned long long base = 1;
+
+    while(base <= limit)
+    {
+        base *= 7;
+        multiplier2 *= 28;
+    }
+    base /= 7;
+    multiplier2 /= 28;
+    while(base > 0)
+    {
+        unsigned long long digit = limit / base;
+
+        total += multiplier*multiplier2*digit*(digit+1)/2;
+        multiplier *= digit+1;
+        limit -= base * digit;
+        base /= 7;
+        multiplier2 /= 28;
+    }
+
+    std::cout << total << '\n';
     return 0;
 }
