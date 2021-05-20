@@ -28,6 +28,20 @@ int main ()
     unsigned long long multiplier2 = 1;
     unsigned long long base = 1;
 
+
+    //For a number n, n choose k has all factors of 
+    //7 removed if k and n-k add together base 7 without overflow, 
+    //because otherwise there is an extra factor of 7 from the higher 
+    //power which is not accounted for
+
+    //Then for each n, figure out how many ways we can distribute 
+    //the digit between the 2 numbers, which is where the digit+1
+    //comes from. However, this only does 1 n at a time, so 
+    //I simplify iterating a digit from 0 to 6 as just multiplying 
+    //the 0 by 28, and the same for other digits
+    //With this, I just need to look at the base 7 representation of 
+    //the limiting value, and do digit*digit+1/2 to sum over all numbers 
+    //smaller than the limit too
     while(base <= limit)
     {
         base *= 7;
