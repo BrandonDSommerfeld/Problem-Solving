@@ -91,7 +91,19 @@ namespace math
 
         bool operator> (const Signed& rhs)
         {
-            return !(*this < rhs || *this == rhs);
+            if(positive)
+            {
+                if(!rhs.positive)
+                {
+                    return true;
+                }
+                return num > rhs.num;
+            }
+            if(rhs.positive)
+            {
+                return false;
+            }
+            return rhs.num > num;
         }
 
         bool operator<= (const Signed& rhs)
@@ -242,6 +254,11 @@ namespace math
             std::string ans = positive ? "" : "-";
             ans += num.to_string();
             return ans;
+        }
+
+        int to_int ()
+        {
+            return (int) num.to_uint();
         }
 
         friend std::ostream& operator<< (std::ostream& os, const Signed& u)

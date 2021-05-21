@@ -37,6 +37,15 @@ int main ()
     }
   }
   
+
+  //For each side of the triangle, look at it and see if 
+  //it is worth removing. Also gradually increase the offset, 
+  //potentially shaving off 2 or more rows at a time if 
+  //they have a positive sum overall
+  //Have to be careful to go around the triangle, considering 
+  //1, then 2, then 3 rows removed, you can't just remove 
+  //any row which is positive because sometimes 
+  //other removals make that first removal a bad idea
   int top = 0;
   int left = 0;
   int bottom = limit-1;
@@ -45,23 +54,31 @@ int main ()
   while(changed)
   {
     changed = false;
-    //std::cout << top << ' ' << bottom << ' ' << left << ' ' << right << '\n';
     for(int offset = 0; offset <= right-left; offset++)
     {
       long long leftSum = 0;
-      for(int row = top+offset; row <= bottom; row++)
+      for(int i = 0; i <= offset; i++)
       {
-        leftSum += triangle[row*limit+left+offset];
+      for(int row = top+i; row <= bottom; row++)
+      {
+        leftSum += triangle[row*limit+left+i];
+      }
       }
       long long rightSum = 0;
-      for(int col = right-offset; col >= left; col--)
+      for(int i = 0; i <= offset; i++)
       {
-        rightSum += triangle[(bottom-offset)*limit+col];
+      for(int col = right-i; col >= left; col--)
+      {
+        rightSum += triangle[(bottom-i)*limit+col];
+      }
       }      
       long long sum = 0;
-      for(int along = 0; along <= bottom-top-offset; along++)
+      for(int i = 0; i <= offset; i++)
       {
-        sum += triangle[(top+along+offset)*limit+along+left];
+      for(int along = 0; along <= bottom-top-i; along++)
+      {
+        sum += triangle[(top+along+i)*limit+along+left];
+      }
       }
       if(sum > 0 && sum >= leftSum && sum >= rightSum)
       {
@@ -84,6 +101,8 @@ int main ()
         right = right-offset-1;
         break;
       }
+
+
     }
   }    
 
