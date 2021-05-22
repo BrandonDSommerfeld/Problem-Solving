@@ -104,6 +104,12 @@ namespace math
             digits = rhs.digits;
             return *this;
         }
+
+        Unsigned& operator= (const Unsigned&& rhs)
+        {
+            digits = rhs.digits;
+            return *this;
+        }
  
         Unsigned operator++ (int)
         {

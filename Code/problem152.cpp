@@ -31,15 +31,18 @@ int main ()
     sumRemaining[i] = sumRemaining[i+1];
     sumRemaining[i] += math::Rational(1,i*i);
   }
+  std::cout << "Not failing\n";
   std::queue<guess*> Q{};
   guess* start = (guess*) malloc(sizeof(guess));
   start->next = 2;
   start->sum = 0;
   int num = 0;
   Q.push(start);
+  std::cout << "Starting\n";
   while(!Q.empty())
   {
     guess* curr = Q.front();
+    //std::cout << curr->sum << '\n';
     Q.pop();
     if(curr->sum + sumRemaining[curr->next] == math::Rational(1,2))
     {

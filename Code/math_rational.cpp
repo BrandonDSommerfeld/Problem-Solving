@@ -37,6 +37,13 @@ namespace math
         return *this;
       }
 
+      Rational& operator= (const math::Rational&& rhs)
+      {
+        numerator = rhs.numerator;
+        denominator = rhs.denominator;
+        return *this;
+      }
+
       bool operator== (const math::Rational& rhs)
       {
         return numerator == rhs.numerator && denominator == rhs.denominator;
@@ -86,7 +93,7 @@ namespace math
 
         if(denominator < 0)
         {
-          numerator *= -numerator;
+          numerator = -numerator;
           denominator = -denominator;
         }
         return *this;
@@ -103,7 +110,7 @@ namespace math
 
         if(denominator < 0)
         {
-          numerator *= -numerator;
+          numerator = -numerator;
           denominator = -denominator;
         }
         return *this;
@@ -120,7 +127,7 @@ namespace math
 
         if(denominator < 0)
         {
-          numerator *= -numerator;
+          numerator = -numerator;
           denominator = -denominator;
         }
         return *this;
@@ -137,7 +144,7 @@ namespace math
 
         if(denominator < 0)
         {
-          numerator *= -numerator;
+          numerator = -numerator;
           denominator = -denominator;
         }
         return *this;

@@ -45,17 +45,24 @@ namespace math
 
         Signed (const Signed& copy)
         {
-            num = math::Unsigned(copy.num);
+            num = copy.num;
             positive = copy.positive;
         }
 
         Signed (const Unsigned& copy)
         {
-            num = math::Unsigned(copy);
+            num = copy;
             positive = true;
         }
 
         Signed& operator= (const Signed& rhs)
+        {
+            num = rhs.num;
+            positive = rhs.positive;
+            return *this;
+        }
+
+        Signed& operator= (const Signed&& rhs)
         {
             num = rhs.num;
             positive = rhs.positive;

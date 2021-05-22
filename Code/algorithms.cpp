@@ -391,11 +391,11 @@ namespace algorithms
     {
         if(num1 < 0)
         {
-            num1 *= -1;
+            num1 = -num1;
         }
         if(num2 < 0)
         {
-            num2 *= -1;
+            num2 = -num2;
         }
         if(num1 == 0)
         {
@@ -788,7 +788,7 @@ namespace algorithms
             ans.push_back(1);
             if(!positive2)
             {
-                ans[1] *= -1;
+                ans[1] = -ans[1];
             }
             ans.push_back(num2);
             return ans;
@@ -799,7 +799,7 @@ namespace algorithms
             ans.push_back(1);
             if(!positive1)
             {
-                ans[0] *= -1;
+                ans[0] = -ans[0];
             }
             ans.push_back(0);
             ans.push_back(num1);
@@ -812,11 +812,11 @@ namespace algorithms
             prev[1] -= prev[0]*(num1/num2);
             if(!positive1)
             {
-                prev[0] *= -1;
+                prev[0] = -prev[0];
             }
             if(!positive2)
             {
-                prev[1] *= -1;
+                prev[1] = -prev[1];
             }
             return prev;
         }
@@ -827,11 +827,11 @@ namespace algorithms
         prev[1] = temp;
         if(!positive1)
         {
-            prev[0] *= -1;
+            prev[0] = -prev[0];
         }
         if(!positive2)
         {
-            prev[1] *= -1;
+            prev[1] = -prev[1];
         }
         return prev;
     }
