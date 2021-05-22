@@ -161,7 +161,7 @@ namespace math
 
         Signed& operator += (const Signed& rhs)
         {
-            if(positive && rhs.positive || !positive && !rhs.positive)
+            if((positive && rhs.positive) || (!positive && !rhs.positive))
             {
                 num += rhs.num;
                 return *this;

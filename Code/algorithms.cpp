@@ -44,7 +44,7 @@ namespace algorithms
     long long totient (long long num)
     {
         long long ans = num;
-        for(int i = 0; i < primes.size () && primes[i] * primes[i] <= num; i++)
+        for(size_t i = 0; i < primes.size () && primes[i] * primes[i] <= num; i++)
         {
             if(num % primes[i] == 0)
             {
@@ -68,7 +68,7 @@ namespace algorithms
     math::Unsigned totient (math::Unsigned num)
     {
         math::Unsigned ans = num;
-        for(int i = 0; i < primes.size () && primes[i] * primes[i] <= num; i++)
+        for(size_t i = 0; i < primes.size () && primes[i] * primes[i] <= num; i++)
         {
             if(num % primes[i] == 0)
             {
@@ -92,7 +92,7 @@ namespace algorithms
     std::vector<int>* factors (int num)
     {
         std::vector<int> *ans = new std::vector<int>{};
-        for(int i = 0; i < primes.size() && primes[i] * primes[i] <= num; i++)
+        for(size_t i = 0; i < primes.size() && primes[i] * primes[i] <= num; i++)
         {
             if(num % primes[i] == 0)
             {
@@ -114,7 +114,7 @@ namespace algorithms
     std::vector<math::Unsigned>* factors (math::Unsigned num)
     {
         std::vector<math::Unsigned> *ans = new std::vector<math::Unsigned>{};
-        for(int i = 0; i < primes.size() && primes[i] * primes[i] <= num; i++)
+        for(size_t i = 0; i < primes.size() && primes[i] * primes[i] <= num; i++)
         {
             if(num % primes[i] == 0)
             {
@@ -163,6 +163,21 @@ namespace algorithms
         return ans;
     }
 
+    unsigned long long exp(unsigned long long base, int exponent)
+    {
+        unsigned long long ans = 1;
+        while(exponent > 0)
+        {
+            if(exponent % 2 == 1)
+            {
+                ans = (ans*base);
+            }
+            base = (base * base);
+            exponent /= 2;
+        }
+        return ans;
+    }
+
     math::Unsigned exp(math::Unsigned base, math::Unsigned exponent, math::Unsigned mod)
     {
         math::Unsigned ans = 1;
@@ -175,6 +190,21 @@ namespace algorithms
             }
             base *= base;
             base %= mod;
+            exponent /= 2;
+        }
+        return ans;
+    }
+
+    math::Signed exp(math::Signed base, math::Signed exponent)
+    {
+        math::Signed ans = 1;
+        while(exponent > 0)
+        {
+            if(exponent % 2 == 1)
+            {
+                ans *= base;
+            }
+            base *= base;
             exponent /= 2;
         }
         return ans;
