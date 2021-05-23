@@ -12,6 +12,7 @@
 #include <queue>
 #include "math_unsigned.cpp"
 #include "math_signed.cpp"
+#include "math_rational.cpp"
 
 namespace algorithms
 {
@@ -39,6 +40,7 @@ namespace algorithms
                 primes.push_back(i);
             }
         }
+        delete[] composite;
     }
 
     long long totient (long long num)

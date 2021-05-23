@@ -24,41 +24,55 @@ int main ()
   
   //Used for early termination, if adding the rest will not get to 
   // 1/2, lookup table for efficiency
-  math::Rational* sumRemaining = (math::Rational*) malloc(sizeof(math::Rational)*82);
+  math::Rational* sumRemaining = (math::Rational*) calloc(sizeof(math::Rational),82);
   sumRemaining[81] = 0;
   for(int i = 80; i >= 2; i--)
   {
     sumRemaining[i] = sumRemaining[i+1];
-    sumRemaining[i] += math::Rational(1,i*i);
+    sumRemaining[i] += math::Rational(1, i*i);
   }
-  std::cout << "Not failing\n";
   std::queue<guess*> Q{};
-  guess* start = (guess*) malloc(sizeof(guess));
+  guess* start = (guess*) calloc(sizeof(guess), 1);
   start->next = 2;
   start->sum = 0;
   int num = 0;
   Q.push(start);
-  std::cout << "Starting\n";
+  int on = 1;
+  algorithms::generatePrimes(100);
   while(!Q.empty())
   {
     guess* curr = Q.front();
-    //std::cout << curr->sum << '\n';
+    if(curr->next != on)
+    {
+      on = curr->next;
+      std::cout << on << '\n';
+    }
     Q.pop();
-    if(curr->sum + sumRemaining[curr->next] == math::Rational(1,2))
+    if(curr->sum == math::Rational(1,2))
     {
       num++;
+    }
+    else if ((curr->next > 15 && algorithms::isPrime(curr->next)) || curr->next % 11 == 0 || 
+    curr->next % 13 == 0 || curr->next % 17 == 0 || curr->next % 19 == 0 
+    || curr->next % 23 == 0 || curr->next % 29 == 0 || curr->next % 31 == 0 
+    || curr->next % 37 == 0)
+    {
+       guess* temp2 = (guess*) calloc(sizeof(guess), 1);
+       temp2->next = curr->next+1;
+       temp2->sum = curr->sum;
+       Q.push(temp2);
     }
     else if (curr->sum + sumRemaining[curr->next] > math::Rational(1,2)
     && curr->next != 81)
     {
-      guess* temp1 = (guess*) malloc(sizeof(guess));
+      guess* temp1 = (guess*) calloc(sizeof(guess), 1);
       temp1->next = curr->next+1;
       temp1->sum = curr->sum + math::Rational(1,curr->next*curr->next);
       Q.push(temp1);
 
       if(curr->sum + sumRemaining[curr->next+1] >= math::Rational(1,2))
       {
-        guess* temp2 = (guess*) malloc(sizeof(guess));
+        guess* temp2 = (guess*) calloc(sizeof(guess), 1);
         temp2->next = curr->next+1;
         temp2->sum = curr->sum;
         Q.push(temp2);

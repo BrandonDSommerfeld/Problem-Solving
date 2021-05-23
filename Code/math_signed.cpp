@@ -20,39 +20,39 @@ namespace math
         bool positive;
     public:
         Signed(int n = 0)
+        : num{n < 0 ? math::Unsigned(-n) : math::Unsigned(n)}, 
+        positive{n >= 0}
         {
-            num = n < 0 ? math::Unsigned(-n) : math::Unsigned(n);
-            positive = n < 0 ? false : true;
         }
 
-        Signed(unsigned int n)
+        Signed(unsigned int n) :
+        num{math::Unsigned(n)},
+        positive{true}
         {
-            num = math::Unsigned(n);
-            positive = true;
         }
 
-        Signed (long long n)
+        Signed (long long n) :
+        num{n < 0 ? math::Unsigned(-n) : math::Unsigned(n)}, 
+        positive{n >= 0}
         {
-            num = n < 0 ? math::Unsigned(-n) : math::Unsigned(n);
-            positive = n < 0 ? false : true;
         }
 
-        Signed (unsigned long long n)
+        Signed (unsigned long long n) :
+        num{math::Unsigned(n)},
+        positive{true}
         {
-            num = math::Unsigned(n);
-            positive = true;
         }
 
-        Signed (const Signed& copy)
+        Signed (const Signed& copy) :
+        num{copy.num},
+        positive{copy.positive}
         {
-            num = copy.num;
-            positive = copy.positive;
         }
 
-        Signed (const Unsigned& copy)
+        Signed (const Unsigned& copy) :
+        num{copy},
+        positive{true}
         {
-            num = copy;
-            positive = true;
         }
 
         Signed& operator= (const Signed& rhs)
