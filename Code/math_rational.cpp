@@ -209,5 +209,5 @@ namespace math
         return denominator;
       }
   };
-};
+}
 #endif

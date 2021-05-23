@@ -471,7 +471,7 @@ namespace algorithms
 
     bool isPrime(math::Unsigned num)
     {
-        for(int i = 0; i < primes.size() && primes[i]*primes[i] <= num; i++)
+        for(size_t i = 0; i < primes.size() && primes[i]*primes[i] <= num; i++)
         {
             if(num % primes[i] == 0)
             {
@@ -483,7 +483,7 @@ namespace algorithms
 
     bool isPrime(long long num)
     {
-        for(int i = 0; i < primes.size() && primes[i]*primes[i] <= num; i++)
+        for(size_t i = 0; i < primes.size() && primes[i]*primes[i] <= num; i++)
         {
             if(num % primes[i] == 0)
             {
@@ -891,6 +891,6 @@ namespace algorithms
         }
         return ans;
     }
-};
+}
 
 #endif
