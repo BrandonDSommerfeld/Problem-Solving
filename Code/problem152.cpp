@@ -6,10 +6,21 @@
 #include <chrono>
 #include <queue>
 #include <list>
+#include <algorithm>
 #include "math_unsigned.cpp"
 #include "math_signed.cpp"
 #include "math_rational.cpp"
 #include "algorithms.cpp"
+
+int exp (int base, int e)
+{
+  int ans = 1;
+  for(int i = 0; i < e; i++)
+  {
+    ans *= base; 
+  }
+  return ans;
+}
 
 struct guess
 {
@@ -21,66 +32,135 @@ int main ()
 {
   //Find how many ways you can write 1/2 as the sum of inverse squares, using 
   //numbers from 1/2^2 to 1/80^2, each only used once
+
+ 
+  std::queue<guess*> Q{};
+  guess* start{new guess};
+  start->next = 2;
+  start->sum = 0;
+  Q.push(start);
+  int num = 0;
+
+  unsigned int limit = 80;
+  int two = 3;
+  int three = 2;
+  int five = 1;
+  int seven = 1;
+  int eleven = 1;
+
+  std::set<unsigned long long> choices{};
+  choices.insert(1);
+  std::set<unsigned long long> copy{choices};
+  for(int i = 1; i <= two; i++)
+  {
+    for(auto iter = copy.begin(); iter != copy.end(); iter++)
+    {
+      if(*iter * exp(2,i) <= limit)
+      choices.insert(*iter * exp(2,i));
+    }
+  }
   
-  //Used for early termination, if adding the rest will not get to 
-  // 1/2, lookup table for efficiency
-  math::Rational* sumRemaining = (math::Rational*) calloc(sizeof(math::Rational),82);
+  copy.clear();
+  copy = choices;
+  for(int i = 1; i <= three; i++)
+  {
+    for(auto iter = copy.begin(); iter != copy.end(); iter++)
+    {
+      if(*iter * exp(3,i) <= limit)
+      choices.insert(*iter * exp(3,i));
+    }
+  }
+
+  copy.clear();
+  copy = choices;
+  for(int i = 1; i <= five; i++)
+  {
+    for(auto iter = copy.begin(); iter != copy.end(); iter++)
+    {
+      if(*iter * exp(5,i) <= limit)
+      choices.insert(*iter * exp(5,i));
+    }
+  }
+
+  copy.clear();
+  copy = choices;
+  for(int i = 1; i <= seven; i++)
+  {
+    for(auto iter = copy.begin(); iter != copy.end(); iter++)
+    {
+      if(*iter * exp(7,i) <= limit)
+      choices.insert(*iter * exp(7,i));
+    }
+  }
+  
+  copy.clear();
+  copy = choices;
+  for(int i = 1; i <= eleven; i++)
+  {
+    for(auto iter = copy.begin(); iter != copy.end(); iter++)
+    {
+      if(*iter * exp(11,i) <= limit)
+      choices.insert(*iter * exp(11,i));
+    }
+  }
+  
+  math::Rational* sumRemaining = (math::Rational*) calloc(sizeof(math::Rational), 82);
   sumRemaining[81] = 0;
   for(int i = 80; i >= 2; i--)
   {
     sumRemaining[i] = sumRemaining[i+1];
-    sumRemaining[i] += math::Rational(1, i*i);
+    if(choices.count(i) != 0)
+    {
+      //std::cout << i << '\n';
+      sumRemaining[i] += math::Rational(1,i*i);
+    }
   }
-  std::queue<guess*> Q{};
-  guess* start = (guess*) calloc(sizeof(guess), 1);
-  start->next = 2;
-  start->sum = 0;
-  int num = 0;
-  Q.push(start);
+  math::Rational half{1,2};
   int on = 1;
-  algorithms::generatePrimes(100);
   while(!Q.empty())
   {
     guess* curr = Q.front();
     if(curr->next != on)
     {
-      on = curr->next;
+      on++;
       std::cout << on << '\n';
     }
     Q.pop();
-    if(curr->sum == math::Rational(1,2))
+    if(curr->sum == half)
     {
       num++;
+      delete curr;
     }
-    else if ((curr->next > 15 && algorithms::isPrime(curr->next)) || curr->next % 11 == 0 || 
-    curr->next % 13 == 0 || curr->next % 17 == 0 || curr->next % 19 == 0 
-    || curr->next % 23 == 0 || curr->next % 29 == 0 || curr->next % 31 == 0 
-    || curr->next % 37 == 0)
+    else if(choices.count(curr->next) == 0 && 
+    static_cast<unsigned int>(curr->next) != limit+1)
     {
-       guess* temp2 = (guess*) calloc(sizeof(guess), 1);
-       temp2->next = curr->next+1;
-       temp2->sum = curr->sum;
-       Q.push(temp2);
+      curr->next++;
+      Q.push(curr);
     }
-    else if (curr->sum + sumRemaining[curr->next] > math::Rational(1,2)
-    && curr->next != 81)
+    else if (curr->sum < half && 
+    curr->sum + sumRemaining[curr->next] >= half
+    && static_cast<unsigned int>(curr->next) != limit+1)
     {
-      guess* temp1 = (guess*) calloc(sizeof(guess), 1);
-      temp1->next = curr->next+1;
-      temp1->sum = curr->sum + math::Rational(1,curr->next*curr->next);
-      Q.push(temp1);
-
-      if(curr->sum + sumRemaining[curr->next+1] >= math::Rational(1,2))
+      if(curr->sum + sumRemaining[curr->next+1] >= half)
       {
-        guess* temp2 = (guess*) calloc(sizeof(guess), 1);
-        temp2->next = curr->next+1;
-        temp2->sum = curr->sum;
-        Q.push(temp2);
-      }
+        guess* temp{new guess};
+        temp->next = curr->next+1;
+        temp->sum = curr->sum;
+        Q.push(temp);
+      }      
+      curr->sum += math::Rational(1, curr->next*curr->next);
+      curr->next++;
+      Q.push(curr);
     }
-    free(curr);
+    else
+    {
+      delete curr;
+    }
+    
   }
-  free(sumRemaining);
+
   std::cout << num << '\n';
+  free(sumRemaining);
+  
   return 0;
 }
