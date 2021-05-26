@@ -6,14 +6,14 @@
       "label": "C/C++: g++.exe build active file ver(1)",
       "command": "C:\\Program Files (x86)\\mingw-w64\\i686-8.1.0-posix-dwarf-rt_v6-rev0\\mingw32\\bin\\g++.exe",
       "args": [
-        "-g",
         "${file}",
         "-o",
         "${fileDirname}\\${fileBasenameNoExtension}.exe", 
         "-Wall", 
         "-Werror", 
         "-Wextra", 
-        "-pedantic"
+        "-pedantic", 
+        "-O3"
       ],
       "options": {
         "cwd": "${fileDirname}"
