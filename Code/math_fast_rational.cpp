@@ -1,92 +1,85 @@
-#ifndef MATH_RATIONAL_H
-#define MATH_RATIONAL_H
+#ifndef MATH_FAST_RATIONAL_H
+#define MATH_FAST_RATIONAL_H
 
-#include "math_signed.cpp"
 #include "algorithms.cpp"
 
 namespace math
 {
-  class Rational
+  class FastRational
   {
     private:
-      math::Signed numerator;
-      math::Signed denominator;
+      long long numerator;
+      long long denominator;
     public:
-      Rational(long long num = 0, long long denom = 1)
+      FastRational(long long num = 0, long long denom = 1)
       : numerator{num}, denominator{denom}
       {
 
       }
 
-      Rational (const math::Signed& num, const math::Signed& denom)
-      : numerator{num}, denominator{denom}
+      FastRational(const math::FastRational& copy) : 
+      numerator{copy.numerator}, denominator{copy.denominator}
       {
 
       }
 
-      Rational (const math::Rational& copy)
-      : numerator{copy.numerator}, denominator{copy.denominator}
-      {
-
-      }
-
-      Rational& operator= (const math::Rational& rhs)
+      FastRational& operator= (const math::FastRational& rhs)
       {
         numerator = rhs.numerator;
         denominator = rhs.denominator;
         return *this;
       }
 
-      Rational& operator= (const math::Rational&& rhs)
+      FastRational& operator= (const math::FastRational&& rhs)
       {
         numerator = rhs.numerator;
         denominator = rhs.denominator;
         return *this;
       }
 
-      friend bool operator== (const math::Rational& lhs, const math::Rational& rhs)
+      friend bool operator== (const math::FastRational& lhs, const math::FastRational& rhs)
       {
         return lhs.numerator == rhs.numerator && lhs.denominator == rhs.denominator;
       }
 
-      friend bool operator!= (const math::Rational& lhs, const math::Rational& rhs)
+      friend bool operator!= (const math::FastRational& lhs, const math::FastRational& rhs)
       {
         return lhs.numerator != rhs.numerator || lhs.denominator != rhs.denominator;
       }
 
-      friend bool operator< (const math::Rational& lhs, const math::Rational& rhs)
+      friend bool operator< (const math::FastRational& lhs, const math::FastRational& rhs)
       {
         return (lhs.numerator*rhs.denominator - rhs.numerator*lhs.denominator) < 0;
       }
 
-      friend bool operator> (const math::Rational& lhs,const math::Rational& rhs)
+      friend bool operator> (const math::FastRational& lhs,const math::FastRational& rhs)
       {
         return (lhs.numerator*rhs.denominator - rhs.numerator*lhs.denominator) > 0;
       }
 
-      friend bool operator<= (const math::Rational& lhs, const math::Rational& rhs)
+      friend bool operator<= (const math::FastRational& lhs, const math::FastRational& rhs)
       {
         return (lhs.numerator*rhs.denominator - rhs.numerator*lhs.denominator) <= 0;
       }
       
-      friend bool operator>= (const math::Rational& lhs, const math::Rational& rhs)
+      friend bool operator>= (const math::FastRational& lhs, const math::FastRational& rhs)
       {
         return (lhs.numerator*rhs.denominator - rhs.numerator*lhs.denominator) >= 0;
       }
 
-      Rational operator- () const 
+      FastRational operator- () const 
       {
-        Rational ans (*this);
+        FastRational ans (*this);
         ans.numerator = -numerator;
         return ans;
       }
 
-      Rational& operator /= (const Rational& rhs)
+      FastRational& operator /= (const FastRational& rhs)
       {
         numerator = numerator*rhs.denominator;
         denominator = denominator*rhs.numerator;
 
-        math::Signed gcd = algorithms::gcd(numerator, denominator);
+        unsigned long long gcd = algorithms::gcd(numerator, denominator);
         numerator /= gcd;
         denominator /= gcd;
 
@@ -98,12 +91,12 @@ namespace math
         return *this;
       }
 
-      Rational& operator *= (const Rational& rhs)
+      FastRational& operator *= (const FastRational& rhs)
       {
         numerator = numerator*rhs.numerator;
         denominator = denominator*rhs.denominator;
 
-        math::Signed gcd = algorithms::gcd(numerator, denominator);
+        unsigned long long gcd = algorithms::gcd(numerator, denominator);
         numerator /= gcd;
         denominator /= gcd;
 
@@ -115,12 +108,12 @@ namespace math
         return *this;
       }
 
-      Rational& operator += (const Rational& rhs)
+      FastRational& operator += (const FastRational& rhs)
       {
         numerator = numerator*rhs.denominator + denominator*rhs.numerator;
         denominator = denominator*rhs.denominator;
 
-        math::Signed gcd = algorithms::gcd(numerator, denominator);
+        unsigned long long gcd = algorithms::gcd(numerator, denominator);
         numerator /= gcd;
         denominator /= gcd;
 
@@ -132,12 +125,12 @@ namespace math
         return *this;
       }
       
-      Rational& operator -= (const Rational& rhs)
+      FastRational& operator -= (const FastRational& rhs)
       {
         numerator = numerator*rhs.denominator - denominator*rhs.numerator;
         denominator = denominator*rhs.denominator;
 
-        math::Signed gcd = algorithms::gcd(numerator, denominator);
+        unsigned long long gcd = algorithms::gcd(numerator, denominator);
         numerator /= gcd;
         denominator /= gcd;
 
@@ -149,61 +142,56 @@ namespace math
         return *this;
       }
 
-      friend Rational operator* (const Rational& lhs, const Rational& rhs)
+      friend FastRational operator* (const FastRational& lhs, const FastRational& rhs)
       {
-        Rational ans{lhs.numerator*rhs.numerator, lhs.denominator*rhs.denominator};
+        FastRational ans{lhs.numerator*rhs.numerator, lhs.denominator*rhs.denominator};
 
-        math::Signed gcd = algorithms::gcd(ans.numerator, ans.denominator);
+        unsigned long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
         ans.numerator /= gcd;
         ans.denominator /= gcd;
         return ans;
       }
-      friend Rational operator/ (const Rational& lhs, const Rational& rhs)
+      friend FastRational operator/ (const FastRational& lhs, const FastRational& rhs)
       {
-        Rational ans{lhs.numerator*rhs.denominator, lhs.denominator*rhs.numerator};
+        FastRational ans{lhs.numerator*rhs.denominator, lhs.denominator*rhs.numerator};
 
-        math::Signed gcd = algorithms::gcd(ans.numerator, ans.denominator);
+        unsigned long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
         ans.numerator /= gcd;
         ans.denominator /= gcd;
         return ans;
       }
-      friend Rational operator+ (const Rational& lhs, const Rational& rhs)
+      friend FastRational operator+ (const FastRational& lhs, const FastRational& rhs)
       {
-        Rational ans{lhs.numerator*rhs.denominator+rhs.numerator*lhs.denominator
+        FastRational ans{lhs.numerator*rhs.denominator+rhs.numerator*lhs.denominator
         , lhs.denominator*rhs.denominator};
 
-        math::Signed gcd = algorithms::gcd(ans.numerator, ans.denominator);
+        unsigned long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
         ans.numerator /= gcd;
         ans.denominator /= gcd;
         return ans;
       }
-      friend Rational operator- (const Rational& lhs, const Rational& rhs)
+      friend FastRational operator- (const FastRational& lhs, const FastRational& rhs)
       {
-        Rational ans{lhs.numerator*rhs.denominator-rhs.numerator*lhs.denominator
+        FastRational ans{lhs.numerator*rhs.denominator-rhs.numerator*lhs.denominator
         , lhs.denominator*rhs.denominator};
-        math::Signed gcd = algorithms::gcd(ans.numerator, ans.denominator);
+        unsigned long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
         ans.numerator /= gcd;
         ans.denominator /= gcd;
         return ans;
-      }
-      
-      std::string to_string () const 
-      {
-        return numerator.to_string() + '/' + denominator.to_string();
       }
 
-      friend std::ostream& operator<< (std::ostream& os, const Rational& num)
+      friend std::ostream& operator<< (std::ostream& os, const FastRational& num)
       {
-        os << num.to_string();
+        os << num.numerator << '/' << num.denominator;
         return os;
       }
 
-      math::Signed get_numerator ()
+      unsigned long long get_numerator ()
       {
         return numerator;
       }
 
-      math::Signed get_denominator ()
+      unsigned long long get_denominator ()
       {
         return denominator;
       }

@@ -69,58 +69,58 @@ namespace math
             return *this;
         }
 
-        bool operator== (const Signed& rhs)
+        friend bool operator== (const Signed& lhs, const Signed& rhs)
         {
-            return num == rhs.num;
+            return lhs.positive == rhs.positive && lhs.num == rhs.num;
         }
 
-        bool operator != (const Signed& rhs)
+        friend bool operator != (const Signed& lhs, const Signed& rhs)
         {
-            return num != rhs.num;
+            return lhs.positive == rhs.positive && lhs.num != rhs.num;
         }
 
-        bool operator< (const Signed& rhs)
+        friend bool operator< (const Signed& lhs, const Signed& rhs)
         {
-            if(positive)
+            if(lhs.positive)
             {
                 if(!rhs.positive)
                 {
                     return false;
                 }
-                return num < rhs.num;
+                return lhs.num < rhs.num;
             }
             if(rhs.positive)
             {
                 return true;
             }
-            return rhs.num < num;
+            return rhs.num < lhs.num;
         }
 
-        bool operator> (const Signed& rhs)
+        friend bool operator> (const Signed& lhs, const Signed& rhs)
         {
-            if(positive)
+            if(lhs.positive)
             {
                 if(!rhs.positive)
                 {
                     return true;
                 }
-                return num > rhs.num;
+                return lhs.num > rhs.num;
             }
             if(rhs.positive)
             {
                 return false;
             }
-            return rhs.num > num;
+            return rhs.num > lhs.num;
         }
 
-        bool operator<= (const Signed& rhs)
+        friend bool operator<= (const Signed& lhs, const Signed& rhs)
         {
-            return !(*this > rhs);
+            return !(lhs > rhs);
         }
 
-        bool operator>= (const Signed& rhs)
+        friend bool operator>= (const Signed& lhs, const Signed& rhs)
         {
-            return !(*this < rhs);
+            return !(lhs < rhs);
         }
 
         Signed operator-() const
