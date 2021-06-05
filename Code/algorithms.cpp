@@ -17,23 +17,23 @@
 namespace algorithms
 {
     static bool *composite;
-    static std::vector<long long> primes;
+    static std::vector<unsigned long long> primes;
 
-    void generatePrimes(long long limit)
+    void generatePrimes(unsigned long long limit)
     {
         composite = new bool[limit];
-        for(long long i{2}; i*i < limit; i++)
+        for(unsigned long long i{2}; i*i < limit; i++)
         {
             if(!composite[i])
             {
-                for(long long j{2}; i*j < limit; j++)
+                for(unsigned long long j{2}; i*j < limit; j++)
                 {
                     composite[i*j] = true;
                 }
             }
         }
 
-        for(long long i = 2; i < limit; i++)
+        for(unsigned long long i = 2; i < limit; i++)
         {
             if(!composite[i])
             {
@@ -43,9 +43,9 @@ namespace algorithms
         delete[] composite;
     }
 
-    long long totient (long long num)
+    unsigned long long totient (unsigned long long num)
     {
-        long long ans = num;
+        unsigned long long ans = num;
         for(size_t i = 0; i < primes.size () && primes[i] * primes[i] <= num; i++)
         {
             if(num % primes[i] == 0)
@@ -91,9 +91,9 @@ namespace algorithms
         return ans;
     }
 
-    std::vector<int>* factors (int num)
+    std::vector<unsigned int>* factors (unsigned int num)
     {
-        std::vector<int> *ans = new std::vector<int>{};
+        std::vector<unsigned int> *ans = new std::vector<unsigned int>{};
         for(size_t i = 0; i < primes.size() && primes[i] * primes[i] <= num; i++)
         {
             if(num % primes[i] == 0)
@@ -483,7 +483,7 @@ namespace algorithms
         return true;
     }
 
-    bool isPrime(long long num)
+    bool isPrime(unsigned long long num)
     {
         for(size_t i = 0; i < primes.size() && primes[i]*primes[i] <= num; i++)
         {
@@ -498,6 +498,27 @@ namespace algorithms
     math::Unsigned numFactors(math::Unsigned num)
     {
         math::Unsigned ans = 1;
+        int power = 0;
+        for(size_t i = 0; primes[i]*primes[i] <= num; i++)
+        {
+            while(num % primes[i] == 0)
+            {
+                num /= primes[i];
+                power++;
+            }
+            ans *= power+1;
+            power = 0;
+        }
+        if(num != 1)
+        {
+            ans *= 2;
+        }
+        return ans;
+    }
+    
+    unsigned long long numFactors(unsigned long long num)
+    {
+        unsigned long long ans = 1;
         int power = 0;
         for(int i = 0; primes[i]*primes[i] <= num; i++)
         {
@@ -515,7 +536,6 @@ namespace algorithms
         }
         return ans;
     }
-
 
     void addRow(math::Signed ***matrix, int n, 
     int row1, int row2, math::Signed num, math::Signed denom)
