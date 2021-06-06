@@ -21,7 +21,7 @@ namespace algorithms
 
     void generatePrimes(unsigned long long limit)
     {
-        composite = new bool[limit];
+        composite = new bool[limit]{};
         for(unsigned long long i{2}; i*i < limit; i++)
         {
             if(!composite[i])
@@ -175,6 +175,23 @@ namespace algorithms
                 ans = (ans*base);
             }
             base = (base * base);
+            exponent /= 2;
+        }
+        return ans;
+    }
+    
+    unsigned long long exp(unsigned long long base, unsigned long long exponent, unsigned long long mod)
+    {
+        unsigned long long ans = 1;
+        while(exponent > 0)
+        {
+            if(exponent % 2 == 1)
+            {
+                ans *= base;
+                ans %= mod;
+            }
+            base *= base;
+            base %= mod;
             exponent /= 2;
         }
         return ans;
@@ -457,14 +474,14 @@ namespace algorithms
         return true;
     }
 
-    math::Unsigned choose (int n, int k)
+    math::Unsigned choose (unsigned long long n, unsigned long long k)
     {
         math::Unsigned ans = 1;
-        for(int i = k+1; i <= n; i++)
+        for(unsigned long long i = k+1; i <= n; i++)
         {
             ans *= i;
         }
-        for(int i = 2; i <= n-k; i++)
+        for(unsigned long long i = 2; i <= n-k; i++)
         {
             ans /= i;
         }
@@ -912,6 +929,36 @@ namespace algorithms
             num /= 10;
         }
         return ans;
+    }
+
+    unsigned long long digitalRoot (unsigned long long num)
+    {
+        while(num >= 10)
+        {
+            unsigned long long next = 0;
+            while(num > 0)
+            {
+                next += num % 10;
+                num /= 10;
+            }
+            num = next;
+        }
+        return num;
+    }
+
+    math::Unsigned digitalRoot (math::Unsigned num)
+    {
+        while(num >= 10)
+        {
+            math::Unsigned next = 0;
+            while(num > 0)
+            {
+                next += num % 10;
+                num /= 10;
+            }
+            num = next;
+        }
+        return num;
     }
 }
 
