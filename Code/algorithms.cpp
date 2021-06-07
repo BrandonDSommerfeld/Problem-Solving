@@ -165,7 +165,7 @@ namespace algorithms
         return ans;
     }
 
-    unsigned long long exp(unsigned long long base, int exponent)
+    unsigned long long exp(unsigned long long base, unsigned long long exponent)
     {
         unsigned long long ans = 1;
         while(exponent > 0)
@@ -295,7 +295,7 @@ namespace algorithms
     }
 
     bool recursiveIsNthPower(unsigned long long low, unsigned long long high,
-    unsigned long long num, int n)
+    unsigned long long num, unsigned long long n)
     {
         if(low == high)
         {
@@ -314,7 +314,7 @@ namespace algorithms
         return true;
     }
 
-    bool isNthPower(unsigned long long num, int n)
+    bool isNthPower(unsigned long long num, unsigned long long n)
     {
         unsigned long long guess = 1;
         while(exp(guess, n) <= num)
@@ -365,7 +365,7 @@ namespace algorithms
     }
 
     unsigned long long recursiveNthRoot(unsigned long long low, unsigned long long high,
-    unsigned long long num, int n)
+    unsigned long long num, unsigned long long n)
     {
         if(low == high || low == high-1)
         {
@@ -384,7 +384,7 @@ namespace algorithms
         return mid;
     }
 
-    unsigned long long nthRoot(unsigned long long num, int n)
+    unsigned long long nthRoot(unsigned long long num, unsigned long long n)
     {
         unsigned long long guess = 1;
         while(exp(guess, n) <= num)
