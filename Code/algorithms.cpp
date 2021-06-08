@@ -960,6 +960,25 @@ namespace algorithms
         }
         return num;
     }
+
+    std::string hexadecimal(math::Unsigned num)
+    {
+        std::string ans{};
+        while(num > 0)
+        {
+            unsigned int remainder = (num % 16).to_uint();
+            if(remainder < 10)
+            {
+                ans = static_cast<char>(remainder+48) + ans;
+            }
+            else
+            {
+                ans = static_cast<char>(remainder+55) + ans;
+            }
+            num /= 16;
+        }
+        return ans;
+    }
 }
 
 #endif
