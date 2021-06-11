@@ -12,6 +12,21 @@
 #include "math_fast_rational.cpp"
 #include "algorithms.cpp"
 
+static constexpr int len = 1;
+
+//The various directions that lines can go, measured from 
+//the negative x axis
+enum class direction
+{
+    THIRTY,
+    SIXTY,
+    NINETY,
+    ONETWENTY,
+    ONEFIFTY,
+    STRAIGHT
+};
+
+
 int main ()
 {
     //Consider an equilateral triangle with lines drawn from each vertex to the midpoint
@@ -22,5 +37,9 @@ int main ()
     //If the starting triangle has side length 1, stack them until you have
     //an equilateral triangle with side length 36
     //Find the number of sub triangles within this
+
+    unsigned long long total = 0;
+    //Need to be careful for the columns
+    std::cout << total << '\n';
     return 0;
 }
