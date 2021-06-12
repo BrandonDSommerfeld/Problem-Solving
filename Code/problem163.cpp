@@ -12,7 +12,7 @@
 #include "math_fast_rational.cpp"
 #include "algorithms.cpp"
 
-static constexpr int len = 2;
+static constexpr int len = 36;
 static constexpr int maxRow = 4*len;
 static constexpr int maxCol = 4*len;
 static constexpr int mid = 2*len;
@@ -71,18 +71,14 @@ bool firstDirection, int row2, int col2)
                 {   
                     if(firstDirection)
                     {
+                        //Move along the second direction
                         total += helper(row1, col1, d1, d2, false, row, col);
                     }
                     else if (lineBetween(row, col, row2, col2))
                     {
+                        //Already know there is a line between row1,col1 and these 
+                        //points, so a triangle is formed if they have a line
                         total++;
-                        std::cout << "Yes " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
-                    }
-                    else
-                    {
-                        std::cout << "No " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
                     }
                 }
                 switch(row % 4)
@@ -115,13 +111,6 @@ bool firstDirection, int row2, int col2)
                     else if (lineBetween(row, col, row2, col2))
                     {
                         total++;
-                        std::cout << "Yes " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
-                    }
-                    else
-                    {
-                        std::cout << "No " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
                     }
                 }
                 row += 2;
@@ -144,21 +133,15 @@ bool firstDirection, int row2, int col2)
                     else if (lineBetween(row, col, row2, col2))
                     {
                         total++;
-                        std::cout << "Yes " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
-                    }
-                    else
-                    {
-                        std::cout << "No " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
                     }
                 }
                 //Have to act differently based on the column, because in 
                 //some you have an upside down triangle, and some 
                 //you have a right side up one
 
-                //Most likely to be wrong here
-                switch(2*(row%8) + ((col-mid) % 4)/2)
+
+                //A little ugly, but it works out
+                switch(2*(row%8) + (std::abs(col-mid) % 4)/2)
                 {
                     case 0:
                     case 3:
@@ -188,13 +171,6 @@ bool firstDirection, int row2, int col2)
                     else if (lineBetween(row, col, row2, col2))
                     {
                         total++;
-                        std::cout << "Yes " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
-                    }
-                    else
-                    {
-                        std::cout << "No " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
                     }
                 }
                 row += 2;
@@ -218,13 +194,6 @@ bool firstDirection, int row2, int col2)
                     else if (lineBetween(row, col, row2, col2))
                     {
                         total++;
-                        std::cout << "Yes " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
-                    }
-                    else
-                    {
-                        std::cout << "No " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
                     }
                 }
                 switch(row % 4)
@@ -259,13 +228,6 @@ bool firstDirection, int row2, int col2)
                     else if (lineBetween(row, col, row2, col2))
                     {
                         total++;
-                        std::cout << "Yes " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
-                    }
-                    else
-                    {
-                        std::cout << "No " << row << ' ' << col << ' '  << row1 << ' ' << col1 << 
-                        ' ' << row2 << ' ' << col2 << '\n';
                     }
                 }
                 col += 2;
@@ -276,6 +238,8 @@ bool firstDirection, int row2, int col2)
     return total;
 }
 
+//Same as above function, but it checks whether each pair of numbers 
+//is connected ahead of time so we can be more efficient later
 void helper2(int row1, int col1, direction d1)
 {
     switch(d1)
@@ -339,7 +303,7 @@ void helper2(int row1, int col1, direction d1)
                 //you have a right side up one
 
                 //Most likely to be wrong here
-                switch(2*(row%8) + ((col-mid) % 4)/2)
+                switch(2*(row%8) + (std::abs(col-mid) % 4)/2)
                 {
                     case 0:
                     case 3:
@@ -426,6 +390,7 @@ void generate (int row, int col, std::vector<direction> d)
     }
 }
 
+//Iterate over all possible pairs of directions to go to create a triangle
 unsigned long long count (int row, int col, std::vector<direction> directions)
 {
     unsigned long long total = 0;
@@ -478,20 +443,26 @@ int main ()
             for(int col = mid-row/2; col <= mid+row/2; col+= 2)
             {
                 std::vector<direction> directions{};
+                //If we are at the bottom, no triangles below it, but check connectedness 
+                //to points to the right to use as a base later
                 if(row == maxRow)
                 {
                     directions.push_back(direction::STRAIGHT);
                 }
+                //Depends if we are at the vertex of a triangle or the
+                //midpoint of the side
                 else if ((col - (mid - row/2)) % 4 == 0)
                 {
                     directions.push_back(direction::SIXTY);
                     directions.push_back(direction::NINETY);
                     directions.push_back(direction::ONETWENTY);
+                    //If we aren't at the right, check that way
                     if(col != mid+row/2)
                     {
                         directions.push_back(direction::ONEFIFTY);
                         directions.push_back(direction::STRAIGHT);
                     }
+                    //Check to the left if not at the left
                     if(col != mid-row/2)
                     {
                         directions.push_back(direction::THIRTY);
@@ -499,6 +470,7 @@ int main ()
                 }
                 else
                 {
+                    //Only ways to go from midpoint
                     directions.push_back(direction::STRAIGHT);
                     directions.push_back(direction::NINETY);
                 }
@@ -521,6 +493,8 @@ int main ()
             for(int col = mid-row/2; col <= mid+row/2; col += 2)
             {
                 std::vector<direction> directions{};
+                //Depends on midpoint of an upwards heading side or
+                //downwards heading
                 if((col - (mid-row/2)) % 4 == 0)
                 {
                     directions.push_back(direction::SIXTY);
