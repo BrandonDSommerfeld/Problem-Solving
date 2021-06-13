@@ -17,6 +17,9 @@ int main ()
     //How many 20 digit numbers never have any triplet
     //have a sum 10 or greater?
     int limit = 1000;
+    //Simply go from left to right, and see how many ways there are 
+    //to get each triplet of digits in the current position,
+    //By building off of whatever the last triplet was
     unsigned long long* ways = (unsigned long long*) calloc(sizeof(unsigned long long), limit);
     for(int i = 100; i < limit; i++)
     {
