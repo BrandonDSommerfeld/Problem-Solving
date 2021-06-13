@@ -14,7 +14,20 @@ namespace math
       FastRational(long long num = 0, long long denom = 1)
       : numerator{num}, denominator{denom}
       {
-
+        if(denom < 0)
+        {
+          numerator *= -1;
+          denominator *= -1;
+        }
+        else if (denom == 0)
+        {
+          std::cout << "Constructor\n";
+          std::cout << num << ' ' << denom << '\n';
+          throw std::bad_alloc();
+        }
+        long long d = algorithms::gcd(numerator, denominator);
+        numerator /= d;
+        denominator /= d;
       }
 
       FastRational(const math::FastRational& copy) : 
@@ -76,10 +89,16 @@ namespace math
 
       FastRational& operator /= (const FastRational& rhs)
       {
+        if(rhs.numerator == 0)
+        {
+          std::cout << "Assignment\n";
+          std::cout << rhs.numerator << ' ' << rhs.denominator << '\n';
+          throw std::bad_alloc();
+        }
         numerator = numerator*rhs.denominator;
         denominator = denominator*rhs.numerator;
 
-        unsigned long long gcd = algorithms::gcd(numerator, denominator);
+        long long gcd = algorithms::gcd(numerator, denominator);
         numerator /= gcd;
         denominator /= gcd;
 
@@ -96,7 +115,7 @@ namespace math
         numerator = numerator*rhs.numerator;
         denominator = denominator*rhs.denominator;
 
-        unsigned long long gcd = algorithms::gcd(numerator, denominator);
+        long long gcd = algorithms::gcd(numerator, denominator);
         numerator /= gcd;
         denominator /= gcd;
 
@@ -113,7 +132,7 @@ namespace math
         numerator = numerator*rhs.denominator + denominator*rhs.numerator;
         denominator = denominator*rhs.denominator;
 
-        unsigned long long gcd = algorithms::gcd(numerator, denominator);
+        long long gcd = algorithms::gcd(numerator, denominator);
         numerator /= gcd;
         denominator /= gcd;
 
@@ -130,7 +149,7 @@ namespace math
         numerator = numerator*rhs.denominator - denominator*rhs.numerator;
         denominator = denominator*rhs.denominator;
 
-        unsigned long long gcd = algorithms::gcd(numerator, denominator);
+        long long gcd = algorithms::gcd(numerator, denominator);
         numerator /= gcd;
         denominator /= gcd;
 
@@ -146,16 +165,22 @@ namespace math
       {
         FastRational ans{lhs.numerator*rhs.numerator, lhs.denominator*rhs.denominator};
 
-        unsigned long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
+        long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
         ans.numerator /= gcd;
         ans.denominator /= gcd;
         return ans;
       }
       friend FastRational operator/ (const FastRational& lhs, const FastRational& rhs)
       {
+        if(rhs.numerator == 0)
+        {
+          std::cout << "Division\n";
+          std::cout << rhs.numerator << ' ' << rhs.denominator << '\n';
+          throw std::bad_alloc();
+        }
         FastRational ans{lhs.numerator*rhs.denominator, lhs.denominator*rhs.numerator};
 
-        unsigned long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
+        long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
         ans.numerator /= gcd;
         ans.denominator /= gcd;
         return ans;
@@ -165,7 +190,7 @@ namespace math
         FastRational ans{lhs.numerator*rhs.denominator+rhs.numerator*lhs.denominator
         , lhs.denominator*rhs.denominator};
 
-        unsigned long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
+        long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
         ans.numerator /= gcd;
         ans.denominator /= gcd;
         return ans;
@@ -174,7 +199,7 @@ namespace math
       {
         FastRational ans{lhs.numerator*rhs.denominator-rhs.numerator*lhs.denominator
         , lhs.denominator*rhs.denominator};
-        unsigned long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
+        long long gcd = algorithms::gcd(ans.numerator, ans.denominator);
         ans.numerator /= gcd;
         ans.denominator /= gcd;
         return ans;
@@ -186,12 +211,12 @@ namespace math
         return os;
       }
 
-      unsigned long long get_numerator ()
+      long long get_numerator ()
       {
         return numerator;
       }
 
-      unsigned long long get_denominator ()
+      long long get_denominator ()
       {
         return denominator;
       }

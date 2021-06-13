@@ -15,13 +15,27 @@ namespace math
       Rational(long long num = 0, long long denom = 1)
       : numerator{num}, denominator{denom}
       {
-
+        if(denom < 0)
+        {
+          numerator = -numerator;
+          denominator = -denominator;
+        }
+        math::Signed d = algorithms::gcd(numerator, denominator);
+        numerator /= d;
+        denominator /= d;
       }
 
       Rational (const math::Signed& num, const math::Signed& denom)
       : numerator{num}, denominator{denom}
       {
-
+        if(denom < 0)
+        {
+          numerator = -numerator;
+          denominator = -denominator;
+        }
+        math::Signed d = algorithms::gcd(numerator, denominator);
+        numerator /= d;
+        denominator /= d;
       }
 
       Rational (const math::Rational& copy)

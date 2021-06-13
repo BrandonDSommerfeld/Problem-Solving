@@ -62,79 +62,70 @@ int main ()
     segments[i].y2 = (gen % 500);
   }
   std::set<point> intersections{};
-  std::cout << '(' << segments[1989].x1 << ',' << segments[1989].y1 << ") ("
-  << segments[1989].x2 << ',' << segments[1989].y2 << ")\n";
-  std::cout << '(' << segments[783].x1 << ',' << segments[783].y1 << ") ("
-  << segments[783].x2 << ',' << segments[783].y2 << ")\n";
   for(int i = 0; i < limit; i++)
   {
     for(int j = 0; j < i; j++)
     {
-      if(segments[i].x1 == segments[i].x2)
+      //Special cases for vertical lines since they don't have defined slope
+      if(segments[i].x1 == segments[i].x2) 
       {
-        if(between(segments[i].x1, segments[j].x1, segments[j].x2)
-        && segments[j].x2 != segments[j].x1)
+        if(segments[j].x1 != segments[j].x2)
         {
-
-          math::FastRational slope2{segments[j].y2 - segments[j].y1, segments[j].x2-segments[j].x1};
-          math::FastRational y = slope2*(segments[i].x1-segments[j].x1) + segments[j].y1;
-          if(between(y, segments[i].y1, segments[i].y2))
+          /*
+          Point slope for line 2:
+          y = m(x-x1)+y1
+          */
+          math::FastRational slope{segments[j].y2-segments[j].y1, segments[j].x2-segments[j].x1};
+          math::FastRational y = slope*(segments[i].x1 - segments[j].x1) + segments[j].y1;
+          if(between(y, segments[i].y1, segments[i].y2)
+          && between(segments[i].x1, segments[j].x1, segments[j].x2))
           {
             point p{segments[i].x1, y};
             intersections.insert(p);
           }
         }
-      }
+      }    
       else if(segments[j].x1 == segments[j].x2)
       {
-        if(between(segments[j].x1, segments[i].x1, segments[i].x2))
+        if(segments[i].x1 != segments[i].x2)
         {
-          math::FastRational slope1{segments[i].y2 - segments[i].y1, segments[i].x2-segments[i].x1};
-          math::FastRational y = slope1*(segments[j].x1-segments[i].x1) + segments[i].y1;
-          if(between(y, segments[j].y1, segments[j].y2))
+          math::FastRational slope{segments[i].y2-segments[i].y1, segments[i].x2-segments[i].x1};
+          math::FastRational y = slope*(segments[j].x1 - segments[i].x1) + segments[i].y1;
+          if(between(y, segments[j].y1, segments[j].y2)
+          && between(segments[j].x1, segments[i].x1, segments[i].x2))
           {
             point p{segments[j].x1, y};
             intersections.insert(p);
           }
         }
-      }
+      } 
       else
       {
-        if(i == 1989 && j == 783)
+        math::FastRational slope1{segments[i].y2-segments[i].y1, segments[i].x2-segments[i].x1};
+        math::FastRational slope2{segments[j].y2-segments[j].y1, segments[j].x2-segments[j].x1};
+        if(slope1 != slope2)
         {
-          std::cout << "Got here\n";
-        }
-        math::FastRational slope1{segments[i].y2 - segments[i].y1, segments[i].x2-segments[i].x1};
-        math::FastRational slope2{segments[j].y2 - segments[j].y1, segments[j].x2-segments[j].x1};
-        if(i == 1989 && j == 783)
-        {
-          std::cout << slope1 << ' ' << slope2 << '\n';
-        }
-        /*
-        Point slope
-        (y - y1) = m(x-x1)
-        y = mx-mx1+y1
-        m1*x - m1*x1 + y1 = m2*x - m2*x2 + y2
-        x = (m1*x1+y2 -m2*x2 - y1) / (m1 - m2)
-        */
-        if(slope1 - slope2 != 0)
-        {
-          //Something funky happening here
-          math::FastRational x{slope1*segments[i].x1 + segments[j].y2 - slope2*segments[j].x2
-          - segments[i].y1};
-          if(i == 1989 && j == 783)
-          {
-            std::cout << "Got x\n";
-          }
-          x *= (1 / math::FastRational(slope1-slope2));
-          if(between(x, segments[i].x1, segments[i].x2) && between(x, segments[j].x2, segments[j].x1))
-          {
-            math::FastRational y = slope1*(x-segments[i].x1) + segments[i].y1;
+          /*
+          y = m1(x-x1) + y1
+          y = m2(x-x2) + y2
+          m1x-m1x1+y1 = m2x-m2x2+y2
+          x(m1-m2) = m1x1-m2x2-y1+y2
+          x = (m1x1-m2x2-y1+y2)/(m1-m2)
+          */
+          math::FastRational x = slope1*segments[i].x1 - slope2*segments[j].x2 
+          - segments[i].y1 + segments[j].y2;
+          x /= (slope1 - slope2);
+
+          if(between(x, segments[i].x1, segments[i].x2) && 
+          between(x, segments[j].x1, segments[j].x2))
+          {  
+            math::FastRational y = slope1*(x - segments[i].x1) + segments[i].y1;
             point p{x, y};
             intersections.insert(p);
           }
         }
-      }
+      }   
+
     }
   }
   std::cout << intersections.size() << '\n';
