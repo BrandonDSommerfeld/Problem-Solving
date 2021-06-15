@@ -6,11 +6,12 @@
 #include <chrono>
 #include <queue>
 #include <list>
-#include "math_unsigned.cpp"
-#include "math_signed.cpp"
-#include "math_rational.cpp"
-#include "math_fast_rational.cpp"
-#include "algorithms.cpp"
+#include <set>
+#include "math_unsigned.h"
+#include "math_signed.h"
+#include "math_rational.h"
+#include "math_fast_rational.h"
+#include "algorithms.h"
 
 struct line
 {

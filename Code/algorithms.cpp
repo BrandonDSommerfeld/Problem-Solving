@@ -10,18 +10,18 @@
 #include <chrono>
 #include <set>
 #include <queue>
-#include "math_unsigned.cpp"
-#include "math_signed.cpp"
-#include "math_rational.cpp"
+#include "math_unsigned.h"
+#include "math_signed.h"
+#include "math_rational.h"
+#include "algorithms.h"
 
 namespace algorithms
 {
-    static bool *composite;
-    static std::vector<unsigned long long> primes;
-
+    std::vector<unsigned long long> primes;
     void generatePrimes(unsigned long long limit)
     {
-        composite = new bool[limit]{};
+        primes = std::vector<unsigned long long>{};
+        bool* composite = new bool[limit]{};
         for(unsigned long long i{2}; i*i < limit; i++)
         {
             if(!composite[i])
@@ -37,7 +37,7 @@ namespace algorithms
         {
             if(!composite[i])
             {
-                primes.push_back(i);
+                algorithms::primes.push_back(i);
             }
         }
         delete[] composite;
@@ -46,17 +46,17 @@ namespace algorithms
     unsigned long long totient (unsigned long long num)
     {
         unsigned long long ans = num;
-        for(size_t i = 0; i < primes.size () && primes[i] * primes[i] <= num; i++)
+        for(size_t i = 0; i < algorithms::primes.size () && algorithms::primes[i] * algorithms::primes[i] <= num; i++)
         {
-            if(num % primes[i] == 0)
+            if(num % algorithms::primes[i] == 0)
             {
-                num /= primes[i];
-                ans /= primes[i];
-                ans *= primes[i]-1;
+                num /= algorithms::primes[i];
+                ans /= algorithms::primes[i];
+                ans *= algorithms::primes[i]-1;
             }
-            while(num % primes[i] == 0)
+            while(num % algorithms::primes[i] == 0)
             {
-                num /= primes[i];
+                num /= algorithms::primes[i];
             }
         }
         if(num > 1)
@@ -70,17 +70,17 @@ namespace algorithms
     math::Unsigned totient (math::Unsigned num)
     {
         math::Unsigned ans = num;
-        for(size_t i = 0; i < primes.size () && primes[i] * primes[i] <= num; i++)
+        for(size_t i = 0; i < algorithms::primes.size () && algorithms::primes[i] * algorithms::primes[i] <= num; i++)
         {
-            if(num % primes[i] == 0)
+            if(num % algorithms::primes[i] == 0)
             {
-                num /= primes[i];
-                ans /= primes[i];
-                ans *= primes[i]-1;
+                num /= algorithms::primes[i];
+                ans /= algorithms::primes[i];
+                ans *= algorithms::primes[i]-1;
             }
-            while(num % primes[i] == 0)
+            while(num % algorithms::primes[i] == 0)
             {
-                num /= primes[i];
+                num /= algorithms::primes[i];
             }
         }
         if(num > 1)
@@ -94,16 +94,16 @@ namespace algorithms
     std::vector<unsigned int>* factors (unsigned int num)
     {
         std::vector<unsigned int> *ans = new std::vector<unsigned int>{};
-        for(size_t i = 0; i < primes.size() && primes[i] * primes[i] <= num; i++)
+        for(size_t i = 0; i < algorithms::primes.size() && algorithms::primes[i] * algorithms::primes[i] <= num; i++)
         {
-            if(num % primes[i] == 0)
+            if(num % algorithms::primes[i] == 0)
             {
-                num /= primes[i];
-                ans->push_back(primes[i]);
+                num /= algorithms::primes[i];
+                ans->push_back(algorithms::primes[i]);
             }
-            while(num % primes[i] == 0)
+            while(num % algorithms::primes[i] == 0)
             {
-                num /= primes[i];
+                num /= algorithms::primes[i];
             }
         }
         if(num > 1)
@@ -116,16 +116,16 @@ namespace algorithms
     std::vector<math::Unsigned>* factors (math::Unsigned num)
     {
         std::vector<math::Unsigned> *ans = new std::vector<math::Unsigned>{};
-        for(size_t i = 0; i < primes.size() && primes[i] * primes[i] <= num; i++)
+        for(size_t i = 0; i < algorithms::primes.size() && algorithms::primes[i] * algorithms::primes[i] <= num; i++)
         {
-            if(num % primes[i] == 0)
+            if(num % algorithms::primes[i] == 0)
             {
-                num /= primes[i];
-                ans->push_back(primes[i]);
+                num /= algorithms::primes[i];
+                ans->push_back(algorithms::primes[i]);
             }
-            while(num % primes[i] == 0)
+            while(num % algorithms::primes[i] == 0)
             {
-                num /= primes[i];
+                num /= algorithms::primes[i];
             }
         }
         if(num > 1)
@@ -490,9 +490,9 @@ namespace algorithms
 
     bool isPrime(math::Unsigned num)
     {
-        for(size_t i = 0; i < primes.size() && primes[i]*primes[i] <= num; i++)
+        for(size_t i = 0; i < algorithms::primes.size() && algorithms::primes[i]*algorithms::primes[i] <= num; i++)
         {
-            if(num % primes[i] == 0)
+            if(num % algorithms::primes[i] == 0)
             {
                 return false;
             }
@@ -502,9 +502,9 @@ namespace algorithms
 
     bool isPrime(unsigned long long num)
     {
-        for(size_t i = 0; i < primes.size() && primes[i]*primes[i] <= num; i++)
+        for(size_t i = 0; i < algorithms::primes.size() && algorithms::primes[i]*algorithms::primes[i] <= num; i++)
         {
-            if(num % primes[i] == 0)
+            if(num % algorithms::primes[i] == 0)
             {
                 return false;
             }
@@ -516,11 +516,11 @@ namespace algorithms
     {
         math::Unsigned ans = 1;
         int power = 0;
-        for(size_t i = 0; primes[i]*primes[i] <= num; i++)
+        for(size_t i = 0; algorithms::primes[i]*algorithms::primes[i] <= num; i++)
         {
-            while(num % primes[i] == 0)
+            while(num % algorithms::primes[i] == 0)
             {
-                num /= primes[i];
+                num /= algorithms::primes[i];
                 power++;
             }
             ans *= power+1;
@@ -537,11 +537,11 @@ namespace algorithms
     {
         unsigned long long ans = 1;
         int power = 0;
-        for(int i = 0; primes[i]*primes[i] <= num; i++)
+        for(int i = 0; algorithms::primes[i]*algorithms::primes[i] <= num; i++)
         {
-            while(num % primes[i] == 0)
+            while(num % algorithms::primes[i] == 0)
             {
-                num /= primes[i];
+                num /= algorithms::primes[i];
                 power++;
             }
             ans *= power+1;
@@ -554,75 +554,60 @@ namespace algorithms
         return ans;
     }
 
-    void addRow(math::Signed ***matrix, int n, 
-    int row1, int row2, math::Signed num, math::Signed denom)
+    void addRow(math::Rational **matrix, int n, 
+    int row1, int row2, const math::Rational& num)
     {
         for(int j = 0; j < n; j++)
         {
-            matrix[row1][j][0] = denom*matrix[row1][j][0]*matrix[row2][j][1]
-                                + num*matrix[row2][j][0]*matrix[row1][j][1];
-            matrix[row1][j][1] *= matrix[row2][j][1]*denom;
-
-            math::Signed g = gcd(matrix[row1][j][0], matrix[row1][j][1]);
-            matrix[row1][j][0] /= g;
-            matrix[row1][j][1] /= g;
+            matrix[row1][j] += num*matrix[row2][j];
         }
     }
 
     //Scales row by num/denom
-    void scaleRow(math::Signed ***matrix, int n, int row,
-    math::Signed num, math::Signed denom)
+    void scaleRow(math::Rational **matrix, int n, int row,
+    const math::Rational& num)
     {
         for(int j = 0; j < n; j++)
         {
-            matrix[row][j][0] *= num;
-            matrix[row][j][1] *= denom;
-
-            math::Signed g = gcd(matrix[row][j][0], matrix[row][j][1]);
-            matrix[row][j][0] /= g;
-            matrix[row][j][1] /= g;
+            matrix[row][j] *= num;
         }
     }
 
-    void swapRows(math::Signed ***matrix, int row1, int row2)
+    void swapRows(math::Rational **matrix, int row1, int row2)
     {
-        math::Signed **temp = matrix[row1];
+        math::Rational *temp = matrix[row1];
         matrix[row1] = matrix[row2];
         matrix[row2] = temp;
     }
 
-    math::Signed ***matrixInverse (math::Signed ***matrix, int n)
+    math::Rational **matrixInverse (math::Rational **matrix, int n)
     {
-        math::Signed ***augmented = new math::Signed**[n];
+        math::Rational **augmented = new math::Rational*[n];
         for(int i = 0; i < n; i++)
         {
-            augmented[i] = new math::Signed*[2*n];
+            augmented[i] = new math::Rational[2*n];
             for(int j = 0; j < n; j++)
             {
-                augmented[i][j] = new math::Signed[2];
-                augmented[i][j+n] = new math::Signed[2];
-                augmented[i][j][0] = matrix[i][j][0];
-                augmented[i][j][1] = matrix[i][j][1];
+                augmented[i][j] = matrix[i][j];
                 if(i == j)
                 {
-                    augmented[i][j+n][0] = 1;
+                    augmented[i][j+n] = 1;
                 }
                 else
                 {
-                    augmented[i][j+n][0] = 0;
+                    augmented[i][j+n] = 0;
                 }
-                augmented[i][j+n][1] = 1;
             }
         }
 
         //Begin solving
         for(int i = 0; i < n; i++)
         {
-            if(augmented[i][i][0] == 0)
+            if(augmented[i][i] == 0)
             {
                 for(int r = i+1; r < n; r++)
                 {
-                    if(augmented[r][i][0] != 0)
+                    if(augmented[r][i] != 0)
                     {
                         swapRows(augmented, i, r);
                         break;
@@ -633,32 +618,166 @@ namespace algorithms
             {
                 if(i == r)
                 {
-                    scaleRow(augmented, 2*n, r, augmented[i][i][1],
-                    augmented[i][i][0]);
+                    scaleRow(augmented, 2*n, r, 1/augmented[i][i]);
                 }
                 else
                 {
                     addRow(augmented, 2*n, r, i, 
-                    static_cast<math::Signed>(-1)*augmented[r][i][0]*augmented[i][i][1],
-                    augmented[r][i][1]*augmented[i][i][0]);
+                    -augmented[r][i]/augmented[i][i]);
                 }
             }
         }
 
-        math::Signed ***ans = new math::Signed**[n];
+        math::Rational **ans = new math::Rational*[n];
         for(int i = 0; i < n; i++)
         {
-            ans[i] = new math::Signed*[n];
+            ans[i] = new math::Rational[n];
             for(int j = 0; j < n; j++)
             {
-                ans[i][j] = new math::Signed[2];
-                ans[i][j][0] = augmented[i][j+n][0];
-                ans[i][j][1] = augmented[i][j+n][1];
-                delete[] augmented[i][j];
+                ans[i][j] = augmented[i][j+n];
             }
             delete[] augmented[i];
         }
         delete[] augmented;
+        return ans;
+    }
+
+    math::Rational** multiply (math::Rational** matrix1, math::Rational** matrix2,
+    int dim1, int dim2, int dim3)
+    {
+        math::Rational** ans = new math::Rational*[dim1];
+        for(int i = 0; i < dim1; i++)
+        {
+            ans[i] = new math::Rational[dim3]{};
+        }
+        for(int i = 0; i < dim1; i++)
+        {
+            for(int j = 0; j < dim3; j++)
+            {
+                for(int k = 0; k < dim2; k++)
+                {
+                    ans[i][j] += matrix1[i][k]*matrix2[k][j];
+                }
+            }
+        }
+        return ans;
+    }
+
+    void addRow(math::FastRational **matrix, int n, 
+    int row1, int row2, const math::FastRational& num)
+    {
+        for(int j = 0; j < n; j++)
+        {
+            matrix[row1][j] += num*matrix[row2][j];
+        }
+    }
+
+    //Scales row by num/denom
+    void scaleRow(math::FastRational **matrix, int n, int row,
+    const math::FastRational& num)
+    {
+        for(int j = 0; j < n; j++)
+        {
+            matrix[row][j] *= num;
+        }
+    }
+
+    void swapRows(math::FastRational **matrix, int row1, int row2)
+    {
+        math::FastRational *temp = matrix[row1];
+        matrix[row1] = matrix[row2];
+        matrix[row2] = temp;
+    }
+
+    math::FastRational **matrixInverse (math::FastRational **matrix, int n)
+    {
+        math::FastRational **augmented = new math::FastRational*[n];
+        for(int i = 0; i < n; i++)
+        {
+            augmented[i] = new math::FastRational[2*n];
+            for(int j = 0; j < n; j++)
+            {
+                augmented[i][j] = matrix[i][j];
+                if(i == j)
+                {
+                    augmented[i][j+n] = 1;
+                }
+                else
+                {
+                    augmented[i][j+n] = 0;
+                }
+            }
+        }
+
+        //Begin solving
+        for(int i = 0; i < n; i++)
+        {
+            for(int a = 0; a < n; a++)
+            {
+                for(int b = 0; b < 2*n; b++)
+                {
+                    std::cout << augmented[a][b] << ' ';
+                }
+                std::cout << '\n';
+            }
+            std::cout << '\n';
+            if(augmented[i][i] == 0)
+            {
+                for(int r = i+1; r < n; r++)
+                {
+                    if(augmented[r][i] != 0)
+                    {
+                        swapRows(augmented, i, r);
+                        break;
+                    }
+                }
+            }
+            for(int r = 0; r < n; r++)
+            {
+                if(i == r)
+                {
+                    scaleRow(augmented, 2*n, r, 1/augmented[i][i]);
+                }
+                else
+                {
+                    addRow(augmented, 2*n, r, i, 
+                    -augmented[r][i]/augmented[i][i]);
+                }
+            }
+        }
+
+        math::FastRational **ans = new math::FastRational*[n];
+        for(int i = 0; i < n; i++)
+        {
+            ans[i] = new math::FastRational[n];
+            for(int j = 0; j < n; j++)
+            {
+                ans[i][j] = augmented[i][j];
+            }
+            delete[] augmented[i];
+        }
+        delete[] augmented;
+        return ans;
+    }
+
+    math::FastRational** multiply (math::FastRational** matrix1, math::FastRational** matrix2,
+    int dim1, int dim2, int dim3)
+    {
+        math::FastRational** ans = new math::FastRational*[dim1];
+        for(int i = 0; i < dim1; i++)
+        {
+            ans[i] = new math::FastRational[dim3]{};
+        }
+        for(int i = 0; i < dim1; i++)
+        {
+            for(int j = 0; j < dim3; j++)
+            {
+                for(int k = 0; k < dim2; k++)
+                {
+                    ans[i][j] += matrix1[i][k]*matrix2[k][j];
+                }
+            }
+        }
         return ans;
     }
 

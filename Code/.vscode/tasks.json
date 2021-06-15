@@ -12,8 +12,13 @@
         "-Wall", 
         "-Werror", 
         "-Wextra", 
-        "-pedantic", 
-        "-O3"
+        "-O3",
+        "-fpermissive",
+        "math_unsigned.cpp",
+        "math_signed.cpp",
+        "algorithms.cpp",
+        "math_rational.cpp",
+        "math_fast_rational.cpp"
       ],
       "options": {
         "cwd": "${fileDirname}"

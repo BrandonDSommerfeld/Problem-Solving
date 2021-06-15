@@ -6,231 +6,155 @@
 #include <chrono>
 #include <queue>
 #include <list>
-#include "math_unsigned.cpp"
-#include "math_signed.cpp"
-#include "math_rational.cpp"
-#include "math_fast_rational.cpp"
-#include "algorithms.cpp"
-
-struct pair
-{
-    int num1;
-    int num2;
-};
-
-bool operator< (const pair& p1, const pair& p2)
-{
-    if(p1.num1 < p2.num1) return true;
-    if(p1.num1 > p2.num1) return false;
-    return p1.num2 < p2.num2;
-}
-
-struct triple
-{
-    int num1;
-    int num2;
-    int num3;
-};
-
-bool operator< (const triple& p1, const triple& p2)
-{
-    if(p1.num1 < p2.num1) return true;
-    if(p1.num1 > p2.num1) return false;
-    if(p1.num2 < p2.num2) return true;
-    if(p1.num2 > p2.num2) return false;
-    return p1.num3 < p2.num3;
-}
-
-struct four
-{
-    int num1;
-    int num2;
-    int num3;
-    int num4;
-};
-
-bool operator< (const four& p1, const four& p2)
-{
-    if(p1.num1 < p2.num1) return true;
-    if(p1.num1 > p2.num1) return false;
-    if(p1.num2 < p2.num2) return true;
-    if(p1.num2 > p2.num2) return false;
-    if(p1.num3 < p2.num3) return true;
-    if(p1.num3 > p2.num3) return false;
-    return p1.num4 < p2.num4;
-}
-
-static std::vector<std::set<four>> possibleRows{};
-static std::vector<std::set<triple>> triples{};
-static std::vector<std::set<pair>> pairs{};
-
-unsigned long long solve (int** board, int row, int sum)
-{
-    unsigned long long total = 0;
-    switch(row)
-    {
-        case 0:
-        for(auto iter = possibleRows[sum].begin(); iter != possibleRows[sum].end(); iter++)
-        {
-            board[0][0] = iter->num1;
-            board[0][1] = iter->num2;
-            board[0][2] = iter->num3;
-            board[0][3] = iter->num4;
-            total += solve(board, 1, sum);
-        }
-        break;
-        case 1:
-        for(auto iter = possibleRows[sum].begin(); iter != possibleRows[sum].end(); iter++)
-        {
-            board[1][0] = iter->num1;
-            board[1][1] = iter->num2;
-            board[1][2] = iter->num3;
-            board[1][3] = iter->num4;
-            pair p{board[0][0], board[1][0]};
-            if(pairs[sum].count(p) > 0)
-            {
-                p = pair{board[0][1], board[1][1]};
-                if(pairs[sum].count(p) > 0)
-                {
-                    p = pair{board[0][2], board[1][2]};
-                    if(pairs[sum].count(p) > 0)
-                    {
-                        p = pair{board[0][3], board[1][3]};
-                        if(pairs[sum].count(p) > 0)
-                        {
-                            p = pair{board[0][0], board[1][1]};
-                            if(pairs[sum].count(p) > 0)
-                            {
-                                p = pair{board[0][3], board[1][2]};
-                                if(pairs[sum].count(p) > 0)
-                                {
-                                    total += solve(board, 2, sum);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        break;
-        case 2:
-        for(auto iter = possibleRows[sum].begin(); iter != possibleRows[sum].end(); iter++)
-        {
-            board[2][0] = iter->num1;
-            board[2][1] = iter->num2;
-            board[2][2] = iter->num3;
-            board[2][3] = iter->num4;
-            triple p{board[0][0], board[1][0], board[2][0]};
-            if(triples[sum].count(p) > 0)
-            {
-                p = triple{board[0][1], board[1][1], board[2][1]};
-                if(triples[sum].count(p) > 0)
-                {
-                    p = triple{board[0][2], board[1][2], board[2][2]};
-                    if(triples[sum].count(p) > 0)
-                    {
-                        p = triple{board[0][3], board[1][3], board[2][3]};
-                        if(triples[sum].count(p) > 0)
-                        {
-                            p = triple{board[0][0], board[1][1], board[2][2]};
-                            if(triples[sum].count(p) > 0)
-                            {
-                                p = triple{board[0][3], board[1][2], board[2][1]};
-                                if(triples[sum].count(p) > 0)
-                                {
-                                    total += solve(board, 3, sum);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        break;
-        case 3:
-        for(auto iter = possibleRows[sum].begin(); iter != possibleRows[sum].end(); iter++)
-        {
-            board[3][0] = iter->num1;
-            board[3][1] = iter->num2;
-            board[3][2] = iter->num3;
-            board[3][3] = iter->num4;
-            four p{board[0][0], board[1][0], board[2][0], board[3][0]};
-            if(possibleRows[sum].count(p) > 0)
-            {
-                p = four{board[0][1], board[1][1], board[2][1], board[3][1]};
-                if(possibleRows[sum].count(p) > 0)
-                {
-                    p = four{board[0][2], board[1][2], board[2][2], board[3][2]};
-                    if(possibleRows[sum].count(p) > 0)
-                    {
-                        p = four{board[0][3], board[1][3], board[2][3], board[3][3]};
-                        if(possibleRows[sum].count(p) > 0)
-                        {
-                            p = four{board[0][0], board[1][1], board[2][2], board[3][3]};
-                            if(possibleRows[sum].count(p) > 0)
-                            {
-                                p = four{board[0][3], board[1][2], board[2][1], board[3][0]};
-                                if(possibleRows[sum].count(p) > 0)
-                                {
-                                    total ++;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        break;
-    }
-    return total;
-}
+#include "math_unsigned.h"
+#include "math_signed.h"
+#include "math_rational.h"
+#include "math_fast_rational.h"
+#include "algorithms.h"
 
 int main ()
 {
     //How many 4x4 grids with numbers 0-9 have all rows, columns, 
     //and both diagonals with the same sum?
 
-    int maxSum = 36;
-    for(int i = 0; i <= maxSum; i++)
-    {
-        possibleRows.push_back(std::set<four>{});
-        triples.push_back(std::set<triple>{});
-        pairs.push_back(std::set<pair>{});
-    }
+    /*
+    1's are squares we iterate over, and the 2's are 
+    determined by the values of the 1's
+    1 1 1 2
+    1 1 2 2
+    1 1 1 2
+    2 2 2 2
+    */
+    //Set up 8 equations, solve for the 2's in terms of the 1's
+    //Then iterate over all ways to set the 1's
 
-    for(int num1 = 0; num1 < 10; num1++)
+    //Where in the left/right matrices each variable appears
+    int* loc = new int[16]{};
+    loc[1] = 1;
+    loc[2] = 2;
+    loc[4] = 3;
+    loc[5] = 4;
+    loc[6] = 1;
+    loc[7] = 2;
+    loc[8] = 5;
+    loc[9] = 6;
+    loc[10] = 7;
+    loc[11] = 3;
+    loc[12] = 4;
+    loc[13] = 5;
+    loc[14] = 6;
+    loc[15] = 7;
+
+    math::FastRational** leftMatrix = new math::FastRational*[8];
+    math::FastRational** rightMatrix = new math::FastRational*[8];
+    for(int i = 0; i < 10; i++)
     {
-        for(int num2 = 0; num2 < 10; num2++)
+        leftMatrix[i] = new math::FastRational[8]{};
+        rightMatrix[i] = new math::FastRational[8]{};
+    }
+    //Comments are abrieviated, 0 for the 0th number
+    //0+1+2+3 = 4+5+6+7
+    //0+1+2-4-5 = -3+6+7
+    leftMatrix[0][loc[0]] = 1;
+    leftMatrix[0][loc[1]] = 1;
+    leftMatrix[0][loc[2]] = 1;
+    leftMatrix[0][loc[4]] = -1;
+    leftMatrix[0][loc[5]] = -1;
+    rightMatrix[0][loc[3]] = -1;
+    rightMatrix[0][loc[6]] = 1;
+    rightMatrix[0][loc[7]] = 1;
+    //0+1+2+3 = 8+9+10+11
+    //0+1+2-8-9-10 = -3+11
+    leftMatrix[1][loc[0]] = 1;
+    leftMatrix[1][loc[1]] = 1;
+    leftMatrix[1][loc[2]] = 1;
+    leftMatrix[1][loc[8]] = -1;
+    leftMatrix[1][loc[9]] = -1;
+    leftMatrix[1][loc[10]] = -1;
+    rightMatrix[1][loc[3]] = -1;
+    rightMatrix[1][loc[11]] = 1;
+    //0+1+2+3 = 12+13+14+15
+    //0+1+2 = -3+12+13+14+15
+    leftMatrix[2][loc[0]] = 1;
+    leftMatrix[2][loc[1]] = 1;
+    leftMatrix[2][loc[2]] = 1;
+    rightMatrix[2][loc[3]] = -1;
+    rightMatrix[2][loc[12]] = 1;
+    rightMatrix[2][loc[13]] = 1;
+    rightMatrix[2][loc[14]] = 1;
+    rightMatrix[2][loc[15]] = 1;
+    //0+1+2+3 = 0+4+8+12
+    //1+2-4-8= -3+12
+    leftMatrix[3][loc[1]] = 1;
+    leftMatrix[3][loc[2]] = 1;
+    leftMatrix[3][loc[4]] = -1;
+    leftMatrix[3][loc[8]] = -1;
+    rightMatrix[3][loc[3]] = -1;
+    rightMatrix[3][loc[12]] = 1;
+    //0+1+2+3 = 1+5+9+13
+    //0+2-5-9 = -3+13
+    leftMatrix[4][loc[0]] = 1;
+    leftMatrix[4][loc[2]] = 1;
+    leftMatrix[4][loc[5]] = -1;
+    leftMatrix[4][loc[9]] = -1;
+    rightMatrix[4][loc[3]] = -1;
+    rightMatrix[4][loc[13]] = 1;
+    //0+1+2+3 = 2+6+10+14
+    //0+1-10 = -3+6+14
+    leftMatrix[5][loc[0]] = 1;
+    leftMatrix[5][loc[1]] = 1;
+    leftMatrix[5][loc[10]] = -1;
+    rightMatrix[5][loc[6]] = 1;
+    rightMatrix[5][loc[3]] = -1;
+    rightMatrix[5][loc[14]] = 1;
+    //0+1+2+3 = 3+7+11+15
+    //0+1+2 = 7+11+15
+    leftMatrix[6][loc[0]] = 1;
+    leftMatrix[6][loc[1]] = 1;
+    leftMatrix[6][loc[2]] = 1;
+    rightMatrix[6][loc[7]] = 1;
+    rightMatrix[6][loc[11]] = 1;
+    rightMatrix[6][loc[15]] = 1;
+    //0+1+2+3 = 0+5+10+15
+    //1+2-5-10 = -3+15
+    leftMatrix[7][loc[1]] = 1;
+    leftMatrix[7][loc[2]] = 1;
+    leftMatrix[7][loc[5]] = -1;
+    leftMatrix[7][loc[10]] = -1;
+    rightMatrix[7][loc[3]] = -1;
+    rightMatrix[7][loc[15]] = 1;
+
+    math::FastRational** inv1 = algorithms::matrixInverse(rightMatrix, 8);
+    
+    //0+1+2+3 = 3+6+9+12
+    //0+1+2-9 = 6+12
+    leftMatrix[7][loc[0]] = 1;
+    leftMatrix[7][loc[1]] = 1;
+    leftMatrix[7][loc[2]] = 1;
+    leftMatrix[7][loc[9]] = -1;
+    rightMatrix[7][loc[6]] = 1;
+    rightMatrix[7][loc[12]] = 1;
+
+    //Probably include both diagonals, rotate the row/col of all 2's?
+
+    math::FastRational** inv2 = algorithms::matrixInverse(rightMatrix, 8);
+
+    for(int i = 0; i < 8; i++)
+    {
+        for(int j = 0; j < 8; j++)
         {
-            for(int num3 = 0; num3 < 10; num3++)
-            {
-                for(int num4 = 0; num4 < 10; num4++)
-                {
-                    four row{num1,num2,num3,num4};
-                    possibleRows[num1+num2+num3+num4].insert(row);
-                    triple t{num1,num2,num3};
-                    triples[num1+num2+num3+num4].insert(t);
-                    pair p{num1, num2};
-                    pairs[num1+num2+num3+num4].insert(p);
-                }
-            }
+            std::cout << inv1[i][j] << ' ';
         }
+        std::cout << '\n';
     }
-
-    int** board = (int**) calloc(sizeof(int*), 4);
-    for(int i = 0; i < 4; i++)
+    std::cout << '\n';
+    for(int i = 0; i < 8; i++)
     {
-        board[i] = (int*) calloc(sizeof(int), 4);
+        for(int j = 0; j < 8; j++)
+        {
+            std::cout << inv2[i][j] << ' ';
+        }
+        std::cout << '\n';
     }
-    unsigned long long total = 0;
-    for(int i = 0; i < 18; i++)
-    {
-        std::cout << i << '\n';
-        total += solve(board, 0, i);
-    }
-    total *= 2;
-    std::cout << total << '\n';
-    total += solve(board, 0, 18);
-    std::cout << total << '\n';
     return 0;
 }
