@@ -712,15 +712,6 @@ namespace algorithms
         //Begin solving
         for(int i = 0; i < n; i++)
         {
-            for(int a = 0; a < n; a++)
-            {
-                for(int b = 0; b < 2*n; b++)
-                {
-                    std::cout << augmented[a][b] << ' ';
-                }
-                std::cout << '\n';
-            }
-            std::cout << '\n';
             if(augmented[i][i] == 0)
             {
                 for(int r = i+1; r < n; r++)
@@ -752,7 +743,7 @@ namespace algorithms
             ans[i] = new math::FastRational[n];
             for(int j = 0; j < n; j++)
             {
-                ans[i][j] = augmented[i][j];
+                ans[i][j] = augmented[i][j+n];
             }
             delete[] augmented[i];
         }

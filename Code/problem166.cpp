@@ -12,6 +12,33 @@
 #include "math_fast_rational.h"
 #include "algorithms.h"
 
+unsigned long long solve(math::FastRational** matrix, int* nums, int curr)
+{
+    if(curr == 8)
+    {
+        for(int i = 0; i < 8; i++)
+        {
+            math::FastRational temp = 0;
+            for(int j = 0; j < 8; j++)
+            {
+                temp += matrix[i][j]*nums[j];
+            }
+            if(temp.get_denominator() != 1 || temp < 0 || temp > 9)
+            {
+                return 0;   
+            }
+        }
+        return 1;
+    }
+    unsigned long long total = 0;
+    for(int i = 0; i < 10; i++)
+    {
+        nums[curr] = i;
+        total += solve(matrix, nums, curr+1);
+    }
+    return total;  
+}
+
 int main ()
 {
     //How many 4x4 grids with numbers 0-9 have all rows, columns, 
@@ -27,6 +54,8 @@ int main ()
     */
     //Set up 8 equations, solve for the 2's in terms of the 1's
     //Then iterate over all ways to set the 1's
+
+    //Slightly slow, the answer is 7130034
 
     //Where in the left/right matrices each variable appears
     int* loc = new int[16]{};
@@ -73,15 +102,13 @@ int main ()
     leftMatrix[1][loc[10]] = -1;
     rightMatrix[1][loc[3]] = -1;
     rightMatrix[1][loc[11]] = 1;
-    //0+1+2+3 = 12+13+14+15
-    //0+1+2 = -3+12+13+14+15
-    leftMatrix[2][loc[0]] = 1;
+    //0+1+2+3 = 0+5+10+15
+    //1+2-5-10 = -3+15
     leftMatrix[2][loc[1]] = 1;
     leftMatrix[2][loc[2]] = 1;
+    leftMatrix[2][loc[5]] = -1;
+    leftMatrix[2][loc[10]] = -1;
     rightMatrix[2][loc[3]] = -1;
-    rightMatrix[2][loc[12]] = 1;
-    rightMatrix[2][loc[13]] = 1;
-    rightMatrix[2][loc[14]] = 1;
     rightMatrix[2][loc[15]] = 1;
     //0+1+2+3 = 0+4+8+12
     //1+2-4-8= -3+12
@@ -115,16 +142,6 @@ int main ()
     rightMatrix[6][loc[7]] = 1;
     rightMatrix[6][loc[11]] = 1;
     rightMatrix[6][loc[15]] = 1;
-    //0+1+2+3 = 0+5+10+15
-    //1+2-5-10 = -3+15
-    leftMatrix[7][loc[1]] = 1;
-    leftMatrix[7][loc[2]] = 1;
-    leftMatrix[7][loc[5]] = -1;
-    leftMatrix[7][loc[10]] = -1;
-    rightMatrix[7][loc[3]] = -1;
-    rightMatrix[7][loc[15]] = 1;
-
-    math::FastRational** inv1 = algorithms::matrixInverse(rightMatrix, 8);
     
     //0+1+2+3 = 3+6+9+12
     //0+1+2-9 = 6+12
@@ -135,26 +152,10 @@ int main ()
     rightMatrix[7][loc[6]] = 1;
     rightMatrix[7][loc[12]] = 1;
 
-    //Probably include both diagonals, rotate the row/col of all 2's?
-
-    math::FastRational** inv2 = algorithms::matrixInverse(rightMatrix, 8);
-
-    for(int i = 0; i < 8; i++)
-    {
-        for(int j = 0; j < 8; j++)
-        {
-            std::cout << inv1[i][j] << ' ';
-        }
-        std::cout << '\n';
-    }
-    std::cout << '\n';
-    for(int i = 0; i < 8; i++)
-    {
-        for(int j = 0; j < 8; j++)
-        {
-            std::cout << inv2[i][j] << ' ';
-        }
-        std::cout << '\n';
-    }
+    math::FastRational** inv = algorithms::matrixInverse(rightMatrix, 8);
+    math::FastRational** res = algorithms::multiply(inv, leftMatrix, 8, 8, 8);
+    int* temp = new int[8]{};
+    std::cout << solve(res, temp, 0) << '\n';    
+    
     return 0;
 }
