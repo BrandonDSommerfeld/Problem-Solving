@@ -27,6 +27,7 @@ unsigned long long* digitCount(unsigned long long num)
   return ans;
 }
 
+//Takes in a set of numbers, and finds the way to concatenate them into the largest possible number
 unsigned long long combine(std::vector<unsigned long long>& nums)
 {
   std::vector<unsigned long long> copies{};
@@ -70,7 +71,8 @@ unsigned long long combine(std::vector<unsigned long long>& nums)
       indices[loc] = temp2;
     }
   }
-
+  //Once sorted, place numbers with smaller leading digits on the left, and
+  //larger leading digits on the right
   unsigned long long ans = 0;
   unsigned long long m = 1;
   for(size_t i = 0; i < nums.size(); i++)
@@ -100,12 +102,14 @@ std::vector<unsigned long long>& nums, std::vector<int>& digitsUsed)
   unsigned long long best = 0;
   unsigned long long num = 1;
   //Stop early if we have too many digits, or we exceed the limit
+  //j is the number we are multiplying by i on the left side
   for(unsigned long long j = 0; j < upper && i*j < limit && totalDigits+num <= 10; j++)
   {
     num = numDigits(j);
     int temp; 
     bool stopNow = true;
     bool keepGoing = true;
+    //Count how many times each digit occurs
     for(int k = 0; k < 10 && (stopNow || keepGoing); k++)
     {
       temp = digitsUsed[k] + digits[j][k];
@@ -118,8 +122,10 @@ std::vector<unsigned long long>& nums, std::vector<int>& digitsUsed)
         keepGoing = false;
       }
     }
+    //Every digit has been used exactly once on the left side
     if(stopNow)
     {
+      //Check that each digit occurs exactly once on the right side
       for(int k = 0; k < 10 && stopNow; k++)
       {
         temp = digits[i*j][k];
@@ -140,6 +146,7 @@ std::vector<unsigned long long>& nums, std::vector<int>& digitsUsed)
           copy2.push_back(nums[k]);
         }
         copy2.push_back(i*j);
+        //Find best way to combine the right hand side
         unsigned long long temp2 = combine(copy2);
         if(temp2 > best)
         {
@@ -147,6 +154,7 @@ std::vector<unsigned long long>& nums, std::vector<int>& digitsUsed)
         }
       }
     }
+    //If every digit appears 1 or less time on the left, we need to add another equation recursively
     if(keepGoing)
     {
       std::vector<unsigned long long> copy2{};
