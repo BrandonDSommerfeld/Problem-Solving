@@ -822,6 +822,20 @@ namespace algorithms
         return true;
     }
 
+    bool fastIsSquare(unsigned long long num)
+    {
+        double s = std::sqrt(num);
+        unsigned long long n = static_cast<unsigned long long>(s);
+        return n*n == num;
+    }
+
+    bool fastSqrt(unsigned long long num)
+    {
+        double s = std::sqrt(num);
+        unsigned long long n = static_cast<unsigned long long>(s);
+        return n;
+    }
+
     bool isSquare(unsigned long long num)
     {
         unsigned long long guess = 1;

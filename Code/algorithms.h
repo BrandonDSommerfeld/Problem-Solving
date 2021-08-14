@@ -64,6 +64,8 @@ namespace algorithms
     bool recursive_square(math::Unsigned num, math::Unsigned low, 
     math::Unsigned high);
     bool isSquare(math::Unsigned num);
+    bool fastIsSquare(unsigned long long num);
+    bool fastSqrt(unsigned long long num);
     bool recursive_square(unsigned long long num, unsigned long long low, 
     unsigned long long high);
     bool isSquare(unsigned long long num);
