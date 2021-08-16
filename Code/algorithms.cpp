@@ -1103,6 +1103,88 @@ namespace algorithms
         }
         return ans;
     }
+
+    std::string hexToBinary(const std::string& s)
+    {
+      std::string ans{};
+      for(size_t i = 0; i < s.length(); i++)
+      {
+        switch(s[i])
+        {
+          case '0':
+            ans += "0000";
+            break;
+          case '1':
+            ans += "0001";
+            break;
+          case '2':
+            ans += "0010";
+            break;
+          case '3':
+            ans += "0011";
+            break;
+          case '4':
+            ans += "0100";
+            break;
+          case '5':
+            ans += "0101";
+            break;
+          case '6':
+            ans += "0100";
+            break;
+          case '7':
+            ans += "0111";
+            break;
+          case '8':
+            ans += "1000";
+            break;
+          case '9':
+            ans += "1001";
+            break;
+          case 'A':
+            ans += "1010";
+            break;
+          case 'B':
+            ans += "1011";
+            break;
+          case 'C':
+            ans += "1100";
+            break;
+          case 'D':
+            ans += "1101";
+            break;
+          case 'E':
+            ans += "1110";
+            break;
+          case 'F':
+            ans += "1111";
+            break;
+          default:
+            std::cout << "Invalid character when converting to binary\n";
+        }
+    }
+    return ans;
+    }
+
+    std::string binary(math::Unsigned num)
+    {
+        std::string ans{};
+        while(num > 0)
+        {
+            if(num % 2 == 0)
+            {
+                ans = '0' + ans;
+            } 
+            else
+            {
+                ans = '1' + ans;
+            }
+            num /= 2;
+        }
+        return ans;
+    }
+
+
 }
 
 #endif

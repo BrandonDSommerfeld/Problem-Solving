@@ -80,6 +80,8 @@ namespace algorithms
     unsigned long long digitalRoot (unsigned long long num);
     math::Unsigned digitalRoot (math::Unsigned num);
     std::string hexadecimal(math::Unsigned num);
+    std::string hexToBinary(const std::string& s);
+    std::string binary(math::Unsigned num);
 }
 
 #endif
