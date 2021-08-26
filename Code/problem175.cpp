@@ -96,6 +96,41 @@ int main ()
   //binary notation of the number 
 
   math::FastRational goal{123456789, 987654321};
-  
+  for(int i = 0; i < 100; i++)
+  {
+    std::vector<int> temp = compressedBinary(algorithms::binary(i));
+    for(size_t j = 0; j+1 < temp.size(); j++)
+    {
+      std::cout << temp[j] << ',';
+    }
+    if(temp.size() > 0)
+    {
+      std::cout << temp[temp.size()-1];
+    }
+    std::cout << ' ' << compressedBinaryToWays(temp) << '\n';
+  } 
+  /*
+  Relationship between f(n-1) and f(n) depends on how many expansions of f(n-1)
+  are not full
+  For example, 10 has
+  8+2
+  8+1+1
+  4+4+2
+  4+2+2+1+1
+
+  8+2+1
+  4+4+2+1
+  S
+  8+4
+  8+2+2
+  8+2+1+1
+  4+4+2+2
+  4+4+2+1+1
+
+  Every expansion with less than 2 1's can just have a 1 added to it
+  Futhermore, as long as there is only a single one of each power, they can be combined
+  For example, 4+2+1+1 can become 4+2+2 or 4+4, depending on how far you combine
+  The number of such trailing single powers depends on the trailing 1's in the binary expansion
+  */
   return 0;
 }
