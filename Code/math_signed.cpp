@@ -25,7 +25,7 @@ positive{n >= 0}
 }
 
 math::Signed::Signed (unsigned long long n) :
-num{math::Unsigned(n)},
+num{math::Unsigned(static_cast<math::Unsigned::Wigit>(n))},
 positive{true}
 {
 }

@@ -78,6 +78,44 @@ unsigned long long compressedBinaryToWays(const std::vector<int>& bin)
   return fullyExpanded + notFullyExpanded;
 }
 
+std::vector<int>* reachGoal (unsigned long long goal, int* best, int total, 
+std::vector<int> working)
+{
+  unsigned long long curr = compressedBinaryToWays(working);
+  if(curr == goal)
+  {
+    std::vector<int>* res = new std::vector<int>;
+    *res = working;
+    return res;
+  }
+  if(curr > goal)
+  {
+    return NULL;
+  }
+
+  working.push_back(1);
+  working.push_back(1);
+  for(int combined = 2; compressedBinaryToWays(working) <= goal && combined+total <= *best; combined++)
+  {
+    for(int first = 1; first < combined; first++)
+    {
+      working[working.size()-2] = first;
+      working[working.size()-1] = combined-first;
+      std::vector<int>* res = reachGoal(goal, best, total+combined, working);
+      if(res != NULL)
+      {
+        for(size_t i = 0; i+1 < res->size(); i++)
+        {
+          std::cout << (*res)[i] << ',';
+        }
+        std::cout << (*res)[res->size()-1] << '\n';
+        return res;
+      }
+    }
+  }
+  return NULL;
+}
+
 int main ()
 {
   //Define f(0) = 1, and f(n) is the number of ways to write n using powers of 2, 
@@ -94,7 +132,8 @@ int main ()
 
   //The shortened binary notation is a big hint, since the value of f(n) depends on the shortened 
   //binary notation of the number 
-
+  
+  /*
   math::FastRational goal{123456789, 987654321};
   for(int i = 0; i < 100; i++)
   {
@@ -108,7 +147,9 @@ int main ()
       std::cout << temp[temp.size()-1];
     }
     std::cout << ' ' << compressedBinaryToWays(temp) << '\n';
-  } 
+  }
+
+  */ 
   /*
   Relationship between f(n-1) and f(n) depends on how many expansions of f(n-1)
   are not full
@@ -118,9 +159,12 @@ int main ()
   4+4+2
   4+2+2+1+1
 
+  11: 1011
   8+2+1
   4+4+2+1
-  S
+  Each expansion where the 2nd to last 1's are not fully expanded has n combinations,
+  and those that are fully expanded have n-1
+  
   8+4
   8+2+2
   8+2+1+1
@@ -132,5 +176,10 @@ int main ()
   For example, 4+2+1+1 can become 4+2+2 or 4+4, depending on how far you combine
   The number of such trailing single powers depends on the trailing 1's in the binary expansion
   */
+
+  int* temp = new int{};
+  *temp = 20;
+  std::vector<int> temp2{};
+  reachGoal(17, temp, 0, temp2);
   return 0;
 }

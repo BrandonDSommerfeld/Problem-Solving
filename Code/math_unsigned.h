@@ -39,6 +39,7 @@ namespace math
         Unsigned(Digit u = 0);
         Unsigned(int u);
         Unsigned(Wigit u);
+        Unsigned(unsigned long long u);
         Unsigned(long long u);
         Unsigned(const std::string& s);
         Unsigned(const Unsigned& copy);

@@ -10,6 +10,7 @@ math::Unsigned::Unsigned(math::Unsigned::Digit u) :
     // empty
 }
 
+
 math::Unsigned::Unsigned(int u) :
     digits(1, u)
 {
@@ -21,6 +22,12 @@ math::Unsigned::Unsigned(math::Unsigned::Wigit u) : digits{}
     digits.push_back(u & 0x0000000FFFFFFFFLL);
     digits.push_back((u >> 32) & 0x0000000FFFFFFFFLL);
     trim();
+}
+
+math::Unsigned::Unsigned(unsigned long long u) : 
+math::Unsigned::Unsigned{static_cast<math::Unsigned::Wigit>(u)}
+{
+
 }
 
 math::Unsigned::Unsigned(long long u) : digits{}
