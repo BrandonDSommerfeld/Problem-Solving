@@ -8,16 +8,39 @@
 #include <list>
 #include <map>
 #include <utility>
+#include <set>
 #include "math_unsigned.h"
 #include "math_signed.h"
 #include "math_rational.h"
 #include "math_fast_rational.h"
 #include "algorithms.h"
 
+/*
+Number is stored backwards with small digits on left side, 
+side that allows for easily adding digits on to the right side later
+*/
+std::string binary(unsigned long long num)
+{
+  std::string ans{};
+  while(num > 0)
+  {
+    if(num % 2 == 0)
+    {
+      ans += "0";
+    }
+    else
+    {
+      ans += "1";
+    }
+    num /= 2;
+  }
+  return ans;
+}
+
 std::vector<int> compressedBinary(const std::string& s)
 {
   int num{0};
-  char last{'1'};
+  char last{'2'};
   std::vector<int> ans{};
   for(size_t i{0}; i < s.length(); i++)
   {
@@ -25,9 +48,12 @@ std::vector<int> compressedBinary(const std::string& s)
     {
       num++;
     }
-    else
+    else 
     {
-      ans.push_back(num);
+      if(last != '2')
+      {
+        ans.push_back(num);
+      }
       num = 1;
       last = s[i];
     }
@@ -36,7 +62,7 @@ std::vector<int> compressedBinary(const std::string& s)
   return ans;
 }
 
-unsigned long long compressedBinaryToWays(const std::vector<int>& bin)
+math::Unsigned compressedBinaryToWays(const std::vector<int>& bin)
 {
   //Product plus 1 for 2 digits, just 1 for 1 digit
 
@@ -57,64 +83,88 @@ unsigned long long compressedBinaryToWays(const std::vector<int>& bin)
   //(ab+1)*(d(c-1)+1) + (a(b+1)+1)*(d)
   //(ab+1)*temp1 + (a(b+1)+1)*temp2
   //For number of ways which do not fully split, and then those that do
-
-  int start = bin.size()-1;
+  
+  size_t start{0};
   if(bin.size() % 2 == 1)
   {
-    start = bin.size()-2;
+    start = 1;
   }
-  unsigned long long notFullyExpanded = 1;
-  unsigned long long fullyExpanded = 0;
-  while(start > 0)
+  math::Unsigned notFullyExpanded{1};
+  math::Unsigned fullyExpanded{0};
+  while(start < bin.size())
   {
-    unsigned long long temp1 = notFullyExpanded;
-    unsigned long long temp2 = fullyExpanded;
-    int ones = bin[start-1];
+    math::Unsigned temp1 = notFullyExpanded;
+    math::Unsigned temp2 = fullyExpanded;
+    int ones = bin[start+1];
     int zeroes = bin[start];
     fullyExpanded = zeroes*(temp1+temp2) + temp2;
     notFullyExpanded = ((ones-1)*zeroes+1)*temp1 + ((ones-1)*(zeroes+1)+1)*temp2;
-    start -= 2;
+    start += 2;
   }
   return fullyExpanded + notFullyExpanded;
 }
 
-std::vector<int>* reachGoal (unsigned long long goal, int* best, int total, 
-std::vector<int> working)
+math::Rational abs(math::Rational num)
 {
-  unsigned long long curr = compressedBinaryToWays(working);
-  if(curr == goal)
-  {
-    std::vector<int>* res = new std::vector<int>;
-    *res = working;
-    return res;
-  }
-  if(curr > goal)
-  {
-    return NULL;
-  }
-
-  working.push_back(1);
-  working.push_back(1);
-  for(int combined = 2; compressedBinaryToWays(working) <= goal && combined+total <= *best; combined++)
-  {
-    for(int first = 1; first < combined; first++)
-    {
-      working[working.size()-2] = first;
-      working[working.size()-1] = combined-first;
-      std::vector<int>* res = reachGoal(goal, best, total+combined, working);
-      if(res != NULL)
-      {
-        for(size_t i = 0; i+1 < res->size(); i++)
-        {
-          std::cout << (*res)[i] << ',';
-        }
-        std::cout << (*res)[res->size()-1] << '\n';
-        return res;
-      }
-    }
-  }
-  return NULL;
+  if(num < 0) return -num;
+  return num;
 }
+
+/*
+Calculates the fraction of expressions of num which use 1's, 
+which is precisely how many ways that num+1 can be represented
+Same formula for expansion as above function
+
+One very important note is that by adding more digits onto the 
+end of the number, the ratio only ever decreases
+*/  
+math::Rational ratio(std::vector<int> num)
+{
+  if(num.size() % 2 == 1)
+  {
+    std::cout << "Odd number in ratio\n";
+    return math::Rational{-1,1};
+  }
+  math::Unsigned fullyExpandedWith1{1};
+  math::Unsigned notFullyExpandedWith1{num[1]-1};
+  math::Unsigned fullyExpandedWithout1{num[0]-1};
+  math::Unsigned notFullyExpandedWithout1{(num[1]-1)*(num[0]-1)+1};
+
+  for(size_t i = 2; i < num.size(); i += 2)
+  {
+    int zeroes = num[i];
+    int ones = num[i+1];
+    math::Unsigned temp1 = notFullyExpandedWith1;
+    math::Unsigned temp2 = fullyExpandedWith1;
+    math::Unsigned temp3 = notFullyExpandedWithout1;
+    math::Unsigned temp4 = fullyExpandedWithout1;
+    fullyExpandedWith1 = zeroes*(temp1+temp2) + temp2;
+    notFullyExpandedWith1 = ((ones-1)*zeroes + 1)*temp1 + ((ones-1)*(zeroes+1)+1)*temp2;
+    fullyExpandedWithout1 = zeroes*(temp3+temp4) + temp4;
+    notFullyExpandedWithout1 = ((ones-1)*zeroes + 1)*temp3 + ((ones-1)*(zeroes+1)+1)*temp4; 
+  }
+  math::Rational ans{fullyExpandedWithout1 + notFullyExpandedWithout1,
+   fullyExpandedWith1+notFullyExpandedWith1+fullyExpandedWithout1+notFullyExpandedWithout1};
+  return ans;
+}
+
+math::Rational continuedFraction(std::vector<int> num)
+{
+  math::Rational ans{0,1};
+  for(size_t i = num.size() - 1; i > 0; i--)
+  {
+    ans = 1/(num[i] + ans);
+  }
+  ans = 1/(num[0] + ans);
+  return ans;
+  //1,1 : 1/2
+  //1,2 : 2/3
+  //2,1 : 1/3
+  //1,3 : 3/4
+  //3,1 : 1/4
+  //1,4 : 4/5
+}
+
 
 int main ()
 {
@@ -133,23 +183,7 @@ int main ()
   //The shortened binary notation is a big hint, since the value of f(n) depends on the shortened 
   //binary notation of the number 
   
-  /*
-  math::FastRational goal{123456789, 987654321};
-  for(int i = 0; i < 100; i++)
-  {
-    std::vector<int> temp = compressedBinary(algorithms::binary(i));
-    for(size_t j = 0; j+1 < temp.size(); j++)
-    {
-      std::cout << temp[j] << ',';
-    }
-    if(temp.size() > 0)
-    {
-      std::cout << temp[temp.size()-1];
-    }
-    std::cout << ' ' << compressedBinaryToWays(temp) << '\n';
-  }
 
-  */ 
   /*
   Relationship between f(n-1) and f(n) depends on how many expansions of f(n-1)
   are not full
@@ -177,9 +211,36 @@ int main ()
   The number of such trailing single powers depends on the trailing 1's in the binary expansion
   */
 
-  int* temp = new int{};
-  *temp = 20;
-  std::vector<int> temp2{};
-  reachGoal(17, temp, 0, temp2);
+  //The ratios converge as you add more digits, like a continued fraction
+  //Ratio is 1- the continued fraction for some reason
+  
+  math::Rational goal{123456789,987654321};
+  math::Rational create{1-goal}; 
+  std::vector<int> frac{};
+  while(create > 0)
+  {
+    math::Signed num = create.get_numerator();
+    math::Signed denom = create.get_denominator();
+    int digit = (denom/num).to_int();
+    frac.push_back(digit);
+    create = math::Rational(denom,num) - digit;
+  }
+  frac[frac.size()-1]--;
+  frac.push_back(1);
+  for(size_t i = frac.size()-1; i > 0; i--)
+  {
+    std::cout << frac[i] << ',';
+  }
+  std::cout << frac[0] << '\n';
+  std::cout << ratio(frac) << ' ' << continuedFraction(frac) << '\n';
+  std::cout << goal << '\n';
+
+  std::cout << compressedBinaryToWays(frac) << '\n';
+  std::vector<int> one{};
+  one.push_back(8);
+  one.push_back(13717420);
+  one.push_back(1);
+  std::cout << compressedBinaryToWays(one) << '\n';
+  //The answer is the value of one
   return 0;
 }
