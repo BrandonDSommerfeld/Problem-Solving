@@ -218,3 +218,4 @@ math::Signed math::Rational::get_denominator ()
 {
   return denominator;
 }
+

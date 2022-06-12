@@ -64,6 +64,7 @@ namespace math
         int to_int ();
         friend std::ostream& operator<< (std::ostream& os, const Signed& u);
         friend std::istream& operator>> (std::istream& is, Signed& u);
+        math::Unsigned to_unsigned();
     };
     
 } // namespace math

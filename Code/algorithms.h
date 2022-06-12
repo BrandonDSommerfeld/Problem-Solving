@@ -23,20 +23,10 @@ namespace algorithms
     math::Unsigned exp(math::Unsigned base, math::Unsigned exponent, math::Unsigned mod);
     math::Signed exp(math::Signed base, math::Signed exponent);
     math::Unsigned exp(math::Unsigned base, math::Unsigned exponent);
-    math::Unsigned recursiveSqrt(math::Unsigned low, math::Unsigned high,
-    math::Unsigned num);
     math::Unsigned sqrt(math::Unsigned num);
-    bool recursiveIsNthPower(math::Unsigned low, math::Unsigned high,
-    math::Unsigned num, int n);
-    bool recursiveIsNthPower(unsigned long long low, unsigned long long high,
-    unsigned long long num, unsigned long long n);
     bool isNthPower(unsigned long long num, unsigned long long n);
     bool isNthPower(math::Unsigned num, int n);
-    math::Unsigned recursiveNthRoot(math::Unsigned low, math::Unsigned high,
-    math::Unsigned num, int n);
     math::Unsigned nthRoot(math::Unsigned num, int n);
-    unsigned long long recursiveNthRoot(unsigned long long low, unsigned long long high,
-    unsigned long long num, unsigned long long n);
     unsigned long long nthRoot(unsigned long long num, unsigned long long n);
     long long gcd(long long num1, long long num2);
     unsigned long long gcd(unsigned long long num1, unsigned long long num2);
@@ -61,16 +51,10 @@ namespace algorithms
     math::FastRational **matrixInverse (math::FastRational **matrix, int n);
     math::FastRational** multiply (math::FastRational** matrix1, math::FastRational** matrix2,
     int dim1, int dim2, int dim3);
-    bool recursive_square(math::Unsigned num, math::Unsigned low, 
-    math::Unsigned high);
     bool isSquare(math::Unsigned num);
     bool fastIsSquare(unsigned long long num);
     bool fastSqrt(unsigned long long num);
-    bool recursive_square(unsigned long long num, unsigned long long low, 
-    unsigned long long high);
     bool isSquare(unsigned long long num);
-    bool recursive_cube(math::Unsigned num, math::Unsigned low, 
-    math::Unsigned high);
     bool isCube(math::Unsigned num);
     std::vector<long long> extendedEuclidean(long long num1, long long num2);
     long long modularInverse(long long a, long long mod);

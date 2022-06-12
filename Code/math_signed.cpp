@@ -166,7 +166,7 @@ math::Signed& math::Signed::operator += (const math::Signed& rhs)
         return *this;
     }
 
-    if(num >= rhs.num)
+    if(num > rhs.num)
     {
         num -= rhs.num;
         return *this;
@@ -273,4 +273,9 @@ std::istream& math::operator>> (std::istream& is, math::Signed& u)
         is >> u.num;
     }
     return is;
+}
+
+math::Unsigned math::Signed::to_unsigned()
+{
+  return math::Unsigned(this->to_string());
 }
