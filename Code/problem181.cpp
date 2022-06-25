@@ -9,7 +9,6 @@
 #include <map>
 #include <utility>
 #include <set>
-#include <unordered_map>
 #include "math_unsigned.h"
 #include "math_signed.h"
 #include "math_rational.h"
