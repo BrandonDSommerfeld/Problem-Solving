@@ -266,9 +266,8 @@ namespace algorithms
 
     math::Unsigned sqrt(math::Unsigned num)
     {
-        if(num == 1) return 1;
         math::Unsigned guess = 1;
-        while(guess*guess < num)
+        while(guess*guess <= num)
         {
             guess *= 2;
         }
