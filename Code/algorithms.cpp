@@ -490,6 +490,7 @@ namespace algorithms
 
     bool isPrime(math::Unsigned num)
     {
+        if(num <= 1) return false;
         for(size_t i = 0; i < algorithms::primes.size() && algorithms::primes[i]*algorithms::primes[i] <= num; i++)
         {
             if(num % algorithms::primes[i] == 0)
@@ -502,6 +503,7 @@ namespace algorithms
 
     bool isPrime(unsigned long long num)
     {
+        if(num <= 1) return false;
         for(size_t i = 0; i < algorithms::primes.size() && algorithms::primes[i]*algorithms::primes[i] <= num; i++)
         {
             if(num % algorithms::primes[i] == 0)
